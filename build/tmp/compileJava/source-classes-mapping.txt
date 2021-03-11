@@ -1,0 +1,9 @@
+Test.java
+ Test
+ Test$1
+MainWindow.java
+ MainWindow
+Bot.java
+ Bot
+ Bot$1
+ Bot$2
