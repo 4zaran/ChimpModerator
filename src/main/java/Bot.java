@@ -11,13 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Objects;
 
 public class Bot extends ListenerAdapter {
     private static String _token = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
-    private MainWindow window;
+    private static MainWindow window;
     private static JDA jda;
 
     public static void main(String[] args){
+        window = new MainWindow();
         try{
             jda = JDABuilder.createDefault(_token)
                     .addEventListeners(new Bot())
@@ -30,8 +32,8 @@ public class Bot extends ListenerAdapter {
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
-        System.out.println("API ready");
-        window = new MainWindow();
+        //System.out.println("API ready");
+        window.logField.setText("Connected!\n");
 
         window.sendMessageButton.addActionListener(new ActionListener() {
             @Override
@@ -39,7 +41,8 @@ public class Bot extends ListenerAdapter {
                 String messageToSend = window.messageField.getText();
                 window.messageField.setText("");
                 TextChannel textChannel = jda.getTextChannelsByName("general",true).get(0);
-                textChannel.sendMessage(messageToSend).queue();
+                if(!Objects.equals(messageToSend, ""))
+                    textChannel.sendMessage(messageToSend).queue();
             }
         });
 
