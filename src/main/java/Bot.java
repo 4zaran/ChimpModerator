@@ -7,72 +7,90 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Objects;
 
-public class Bot extends ListenerAdapter {
-    private static String _token = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
-    private static MainWindow window;
-    private static JDA jda;
+class JDAService {
+    private JDA jda;
+    private final JDABuilder jdaBuild;
 
-    public static void main(String[] args){
-        window = new MainWindow();
-        try{
-            jda = JDABuilder.createDefault(_token)
-                    .addEventListeners(new Bot())
-                    .build();
+    public JDAService(){
+        String TOKEN = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
+        jdaBuild = JDABuilder.createDefault(TOKEN)
+                .addEventListeners(new Bot());
+    }
+    
+    public void connect(){
+        try {
+            jda = jdaBuild.build();
             jda.awaitReady();
         } catch (LoginException | InterruptedException le) {
-            //System.out.println(le.getMessage());
+            System.out.println(le.getMessage());
         }
+    }
+
+    public void disconnect(){
+        jda.shutdownNow();
+        System.exit(0);
+    }
+    
+    public JDA getJda(){
+        return jda;
+    }
+
+    public TextChannel getTextChannel(String name){
+        return jda.getTextChannelsByName(name, true).get(0);
+    }
+}
+
+public class Bot extends ListenerAdapter {
+    private static JDAService jda;
+    private static MainWindow window;
+
+    public static void main(String[] args) {
+        window = new MainWindow();
+        jda = new JDAService();
+        jda.connect();
     }
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
-        //System.out.println("API ready");
-        window.logField.setText("Connected!\n");
+        window.printText("Connected!");
 
-        window.sendMessageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String messageToSend = window.messageField.getText();
-                window.messageField.setText("");
-                TextChannel textChannel = jda.getTextChannelsByName("general",true).get(0);
-                if(!Objects.equals(messageToSend, ""))
-                    textChannel.sendMessage(messageToSend).queue();
-            }
-        });
+        window.sendButton.addActionListener(e -> sendMessage());
 
-        window.messageField.addKeyListener( new KeyListener() {
-            @Override
-            public void keyPressed( KeyEvent evt ) {
-                if(evt.getKeyCode() == evt.VK_ENTER){
-                    String messageToSend = window.messageField.getText();
-                    window.messageField.setText("");
-                    TextChannel textChannel = jda.getTextChannelsByName("general",true).get(0);
-                    textChannel.sendMessage(messageToSend).queue();
-                }
-            }
-
+        window.messageTextField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-
             }
 
             @Override
-            public void keyReleased( KeyEvent evt ){}
-        } );
+            public void keyReleased(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    sendMessage();
+                }
+            }
+        });
     }
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
-        //System.out.println(event.getMessage().getContentRaw());
-        String currentText = window.logField.getText();
-        currentText += (event.getMember().getEffectiveName() + ": " + event.getMessage().getContentRaw() + '\n');
+        window.printText(event.getMember().getEffectiveName() + ": " + event.getMessage().getContentRaw());
+    }
 
-        window.logField.setText(currentText);
+    private void sendMessage() {
+        String messageToSend = window.messageTextField.getText();
+        if(messageToSend.equals("exit")){
+            jda.disconnect();
+        }
+        window.messageTextField.setText("");
+        TextChannel textChannel = jda.getTextChannel("general");
+        if (!Objects.equals(messageToSend, ""))
+            textChannel.sendMessage(messageToSend).queue();
     }
 }

@@ -1,8 +1,8 @@
+Test.java
+ Test
+MainWindow.java
+ MainWindow
 Bot.java
  Bot
  Bot$1
- Bot$2
-MainWindow.java
- MainWindow
-Test.java
- Test
+ JDAService
