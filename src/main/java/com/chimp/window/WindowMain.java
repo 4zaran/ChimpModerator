@@ -1,13 +1,15 @@
+package com.chimp.window;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class MainWindow extends JFrame {
+public class WindowMain extends JFrame {
     public JButton sendButton;
     public JTextArea logTextArea;
     public JTextField messageTextField;
     private JScrollPane logScrollPane;
 
-    public MainWindow() {
+    public WindowMain() {
         super("Main Window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocation(50, 50);

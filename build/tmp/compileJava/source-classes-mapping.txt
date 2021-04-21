@@ -1,8 +1,15 @@
-Test.java
- Test
-MainWindow.java
- MainWindow
-Bot.java
- Bot
- Bot$1
- JDAService
+com/chimp/commands/CommandSet.java
+ com.chimp.commands.CommandSet
+com/chimp/ApplicationMain.java
+ com.chimp.ApplicationMain
+ com.chimp.ApplicationMain$1
+com/chimp/window/WindowTest.java
+ com.chimp.window.WindowTest
+com/chimp/commands/Command.java
+ com.chimp.commands.Command
+com/chimp/commands/CommandKick.java
+ com.chimp.commands.CommandKick
+com/chimp/window/WindowMain.java
+ com.chimp.window.WindowMain
+com/chimp/ApplicationService.java
+ com.chimp.ApplicationService
