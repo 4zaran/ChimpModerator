@@ -3,9 +3,11 @@ package com.chimp;
 import com.chimp.commands.Command;
 import com.chimp.commands.CommandBan;
 import com.chimp.commands.CommandKick;
+import com.chimp.services.ApplicationService;
+import com.chimp.services.Logger;
+import com.chimp.services.MessageInterpreter;
 import com.chimp.window.WindowMain;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,9 +21,13 @@ import java.util.Objects;
 public class ApplicationMain extends ListenerAdapter {
     private static ApplicationService jda;
     private static WindowMain window;
+    private static Logger logger;
+    private static MessageInterpreter interpreter;
 
     public static void main(String[] args) {
+        interpreter = new MessageInterpreter();
         window = new WindowMain();
+        logger = new Logger(window);
         jda = new ApplicationService();
         jda.connect();
     }
@@ -52,18 +58,8 @@ public class ApplicationMain extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
-        String messageContent = event.getMessage().getContentRaw();
-
-        window.printText(event.getMember().getEffectiveName() + ": " + messageContent);
-
-        if (messageContent.toLowerCase().startsWith("/kick")){
-            Command c = new CommandKick();
-            c.execute(event);
-        }
-        if (messageContent.toLowerCase().startsWith("/ban")){
-            Command c = new CommandBan();
-            c.execute(event);
-        }
+        interpreter.handleMessage(event);
+        logger.logMessage(event);
     }
 
     private void sendMessage() {
