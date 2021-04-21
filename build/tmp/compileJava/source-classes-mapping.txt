@@ -1,15 +1,27 @@
-com/chimp/commands/CommandSet.java
- com.chimp.commands.CommandSet
-com/chimp/ApplicationMain.java
- com.chimp.ApplicationMain
- com.chimp.ApplicationMain$1
-com/chimp/window/WindowTest.java
- com.chimp.window.WindowTest
-com/chimp/commands/Command.java
- com.chimp.commands.Command
-com/chimp/commands/CommandKick.java
- com.chimp.commands.CommandKick
+com/chimp/services/Logger.java
+ com.chimp.services.Logger
 com/chimp/window/WindowMain.java
  com.chimp.window.WindowMain
-com/chimp/ApplicationService.java
- com.chimp.ApplicationService
+com/chimp/services/ApplicationService.java
+ com.chimp.services.ApplicationService
+com/chimp/window/WindowTest.java
+ com.chimp.window.WindowTest
+com/chimp/window/WindowManager.java
+ com.chimp.window.WindowManager
+ com.chimp.window.WindowManager$1
+com/chimp/services/MessageInterpreter.java
+ com.chimp.services.MessageInterpreter
+com/chimp/commands/Command.java
+ com.chimp.commands.Command
+com/chimp/commands/CommandExit.java
+ com.chimp.commands.CommandExit
+com/chimp/ApplicationMain.java
+ com.chimp.ApplicationMain
+com/chimp/commands/CommandPurge.java
+ com.chimp.commands.CommandPurge
+com/chimp/commands/CommandSet.java
+ com.chimp.commands.CommandSet
+com/chimp/commands/CommandBan.java
+ com.chimp.commands.CommandBan
+com/chimp/commands/CommandKick.java
+ com.chimp.commands.CommandKick

@@ -8,29 +8,28 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandKick implements Command{
-
     @Override
-    public void execute(@NotNull MessageReceivedEvent event) {
+    public void execute(@NotNull MessageReceivedEvent event, String[] parameters) {
         Message msg = event.getMessage();
         Member member = event.getMember();
         String messageContent = msg.getContentRaw();
         MessageChannel channel = event.getChannel();
 
-        String[] messageContentParams = messageContent.split("\\s+");
+        //String[] messageContentParams = messageContent.split("\\s+");
 
         if (msg.getMentionedMembers().isEmpty()){
+            channel.sendMessage("Missing user to kick!").queue();
             return;
         }
-        if(messageContentParams.length < 3) {
+        if(parameters.length < 3) {
             channel.sendMessage("Missing reason!").queue();
             return;
         }
 
         StringBuilder reason = new StringBuilder();
-        for(int i = 2; i < messageContentParams.length; i++){
-            reason.append(messageContentParams[i]).append(" ");
+        for(int i = 2; i < parameters.length; i++){
+            reason.append(parameters[i]).append(" ");
         }
-        channel.sendMessage("Reason: " + reason).queue();
 
         Member target = msg.getMentionedMembers().get(0);
         if (!member.canInteract(target) || !member.hasPermission(Permission.KICK_MEMBERS)) {
@@ -56,7 +55,7 @@ public class CommandKick implements Command{
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Used to kick user from server";
     }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandBan implements Command{
     @Override
-    public void execute(@NotNull MessageReceivedEvent event) {
+    public void execute(@NotNull MessageReceivedEvent event, String[] parameters) {
         Message msg = event.getMessage();
         Member member = event.getMember();
         String messageContent = msg.getContentRaw();
@@ -18,6 +18,7 @@ public class CommandBan implements Command{
         String[] messageContentParams = messageContent.split("\\s+");
 
         if (msg.getMentionedMembers().isEmpty()){
+            channel.sendMessage("Missing user to ban!").queue();
             return;
         }
         if(messageContentParams.length < 3) {
@@ -54,7 +55,7 @@ public class CommandBan implements Command{
     }
 
     @Override
-    public String getDescription() {
-        return null;
+    public @NotNull String getDescription() {
+        return "Used to ban user from server";
     }
 }

@@ -8,8 +8,10 @@ public abstract class CommandSet {
     public static HashMap<String, Command> getCommands(){
         commands = new HashMap<>();
 
-        commands.put("/kick", new CommandKick());
         commands.put("/ban", new CommandBan());
+        commands.put("/exit", new CommandExit());
+        commands.put("/kick", new CommandKick());
+        commands.put("/purge", new CommandPurge());
 
         return commands;
     }

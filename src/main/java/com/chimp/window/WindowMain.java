@@ -2,6 +2,8 @@ package com.chimp.window;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class WindowMain extends JFrame {
     public JButton sendButton;
@@ -83,5 +85,11 @@ public class WindowMain extends JFrame {
     public void printText(String text) {
         String currentText = logTextArea.getText() + text + '\n';
         logTextArea.setText(currentText);
+    }
+
+    public String getMessageText(){
+        String messageToSend = messageTextField.getText();
+        messageTextField.setText("");
+        return messageToSend;
     }
 }

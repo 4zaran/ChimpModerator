@@ -15,4 +15,8 @@ public class Logger {
         String messageContent = event.getMessage().getContentRaw();
         window.printText(event.getMember().getEffectiveName() + ": " + messageContent);
     }
+
+    public void logInfo(String info){
+        window.printText("Connected!");
+    }
 }
