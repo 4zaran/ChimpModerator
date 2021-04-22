@@ -7,32 +7,29 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
 public class CommandBan implements Command{
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, String[] parameters) {
+    public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         Message msg = event.getMessage();
         Member member = event.getMember();
         String messageContent = msg.getContentRaw();
         MessageChannel channel = event.getChannel();
 
-        String[] messageContentParams = messageContent.split("\\s+");
-
         if (msg.getMentionedMembers().isEmpty()){
             channel.sendMessage("Missing user to ban!").queue();
             return;
         }
-        if(messageContentParams.length < 3) {
+        if(parameters.size() < 3) {
             channel.sendMessage("Missing reason!").queue();
             return;
         }
 
-        StringBuilder reason = new StringBuilder();
-        for(int i = 2; i < messageContentParams.length; i++){
-            reason.append(messageContentParams[i]).append(" ");
-        }
-
         Member target = msg.getMentionedMembers().get(0);
-        if (!member.canInteract(target) || !member.hasPermission(Permission.BAN_MEMBERS)) {
+        if (!Objects.requireNonNull(member).canInteract(target) || !member.hasPermission(Permission.BAN_MEMBERS)) {
             channel.sendMessage("You need permission to ban members!").queue();
             return;
         }
@@ -44,10 +41,10 @@ public class CommandBan implements Command{
             return;
         }
 
-
+        String reason = parameters.get(2);
         event.getGuild()
-                .ban(target,0, reason.toString())
-                .reason(reason.toString())
+                .ban(target,0, reason)
+                .reason(reason)
                 .queue(
                         (__) -> event.getChannel().sendMessage("Ban was successful").queue(),
                         (error) -> event.getChannel().sendMessageFormat("Could not ban %s", error.getMessage()).queue()
@@ -57,5 +54,12 @@ public class CommandBan implements Command{
     @Override
     public @NotNull String getDescription() {
         return "Used to ban user from server";
+    }
+
+    @Override
+    public @NotNull HashMap<String, String> getSyntax() {
+        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+        commandsWithDescriptions.put("/ban @user \"reason of ban\"", "Bans specified user");
+        return commandsWithDescriptions;
     }
 }

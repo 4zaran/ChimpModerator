@@ -10,6 +10,7 @@ public abstract class CommandSet {
 
         commands.put("/ban", new CommandBan());
         commands.put("/exit", new CommandExit());
+        commands.put("/help", new CommandHelp());
         commands.put("/kick", new CommandKick());
         commands.put("/purge", new CommandPurge());
 

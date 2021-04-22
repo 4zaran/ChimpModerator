@@ -1,6 +1,6 @@
 package com.chimp.window;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
 public class WindowTest {
     public static void main(String[] args) {

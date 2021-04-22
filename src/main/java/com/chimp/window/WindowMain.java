@@ -2,8 +2,6 @@ package com.chimp.window;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class WindowMain extends JFrame {
     public JButton sendButton;

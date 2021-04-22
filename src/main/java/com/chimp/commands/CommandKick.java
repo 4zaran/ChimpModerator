@@ -7,32 +7,29 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+
 public class CommandKick implements Command{
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, String[] parameters) {
+    public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         Message msg = event.getMessage();
         Member member = event.getMember();
         String messageContent = msg.getContentRaw();
         MessageChannel channel = event.getChannel();
 
-        //String[] messageContentParams = messageContent.split("\\s+");
-
         if (msg.getMentionedMembers().isEmpty()){
             channel.sendMessage("Missing user to kick!").queue();
             return;
         }
-        if(parameters.length < 3) {
+        if(parameters.size() < 3) {
             channel.sendMessage("Missing reason!").queue();
             return;
         }
 
-        StringBuilder reason = new StringBuilder();
-        for(int i = 2; i < parameters.length; i++){
-            reason.append(parameters[i]).append(" ");
-        }
-
         Member target = msg.getMentionedMembers().get(0);
-        if (!member.canInteract(target) || !member.hasPermission(Permission.KICK_MEMBERS)) {
+        if (!Objects.requireNonNull(member).canInteract(target) || !member.hasPermission(Permission.KICK_MEMBERS)) {
             channel.sendMessage("You need permission to kick!").queue();
             return;
         }
@@ -45,9 +42,10 @@ public class CommandKick implements Command{
         }
 
 
+        String reason = parameters.get(2);
         event.getGuild()
-                .kick(target, reason.toString())
-                .reason(reason.toString())
+                .kick(target, reason)
+                .reason(reason)
                 .queue(
                         (__) -> event.getChannel().sendMessage("Kick was successful").queue(),
                         (error) -> event.getChannel().sendMessageFormat("Could not kick %s", error.getMessage()).queue()
@@ -57,5 +55,12 @@ public class CommandKick implements Command{
     @Override
     public @NotNull String getDescription() {
         return "Used to kick user from server";
+    }
+
+    @Override
+    public @NotNull HashMap<String, String> getSyntax() {
+        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+        commandsWithDescriptions.put("/kick @user \"Reason of kick\"", "Kicks user from server with specifed reason");
+        return commandsWithDescriptions;
     }
 }
