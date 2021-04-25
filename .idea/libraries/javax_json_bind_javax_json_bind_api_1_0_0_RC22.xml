@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="javax.json.bind:javax.json.bind-api:1.0.0-RC2" type="repository">
+    <properties maven-id="javax.json.bind:javax.json.bind-api:1.0.0-RC2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/javax/json/bind/javax.json.bind-api/1.0.0-RC2/javax.json.bind-api-1.0.0-RC2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/javax/json/bind/javax.json.bind-api/1.0.0-RC2/javax.json.bind-api-1.0.0-RC2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/javax/json/bind/javax.json.bind-api/1.0.0-RC2/javax.json.bind-api-1.0.0-RC2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

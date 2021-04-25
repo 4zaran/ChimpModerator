@@ -2,34 +2,45 @@ package com.chimp.services;
 
 import com.chimp.commands.Command;
 import com.chimp.commands.CommandSet;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
 public class MessageInterpreter {
-    private HashMap<String, Command> commands;
+    private final HashMap<String, Command> commands;
+    private AutoModerator autoModerator;
+
 
     public MessageInterpreter(){
         commands = CommandSet.getCommands();
+        autoModerator = new AutoModerator();
     }
 
     public void handleMessage(@Nonnull MessageReceivedEvent event) {
         List<String> messageParameters = splitMessage(event.getMessage().getContentRaw());
 
+        // Ignore blank messages (for example embeds)
         if (event.getMessage().getContentRaw().equals("")) return;
 
         if (commands.containsKey(messageParameters.get(0).toLowerCase())){
             Command c = commands.get(messageParameters.get(0).toLowerCase());
             c.execute(event, messageParameters);
+
             if (!messageParameters.get(0).equalsIgnoreCase("/purge")) {
                 event.getMessage().delete().queue();
             }
         }
+        // Bots are not violating, right?
+        else if (!event.getAuthor().isBot())
+            autoModerator.checkViolation(event);
+
     }
 
 //    public String[] splitMessage(String message){
@@ -63,5 +74,4 @@ public class MessageInterpreter {
             parameters.add(m.group(1).replace("\"", ""));
         return parameters;
     }
-
 }

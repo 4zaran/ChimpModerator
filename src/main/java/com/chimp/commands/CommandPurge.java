@@ -10,11 +10,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Used to mass-delete messages
+ * from text channel on which the command was used.
+ * <p>
+ * The command is using filters to be more useful.
+ */
 public class CommandPurge implements Command{
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        JDA jda = event.getJDA();
-        TextChannel channel = jda.getTextChannelsByName("general", true).get(0);
+        TextChannel channel = event.getTextChannel();
         Message commandMessage = event.getMessage();
 
         int amount;
@@ -23,6 +28,9 @@ public class CommandPurge implements Command{
             amount = Integer.parseInt(parameters.get(1));
             // Do not count the command message
             amount++;
+            //TODO może ostrzeżenie, że nie można tak dużo?
+            if(amount > 100)
+                amount = 100;
         }
         else{
             // Delete 10 last messages (+ message containing command to do so)
@@ -33,10 +41,10 @@ public class CommandPurge implements Command{
 
         //Filter them if arguments are provided
         if(parameters.size() > 1){
-            boolean mentioned = false;
+            boolean mentionHandled = false;
             for (int i = 0; i < parameters.size(); i++) {
-                if (!mentioned && event.getMessage().getMentionedUsers().size() > 0){
-                    mentioned = true;
+                if (!mentionHandled && event.getMessage().getMentionedUsers().size() > 0){
+                    mentionHandled = true;
                     List<User> MentionedUsers = event.getMessage().getMentionedUsers();
                     messages.removeIf(curr -> !MentionedUsers.get(0).equals(curr.getAuthor()));
                 }
@@ -47,14 +55,21 @@ public class CommandPurge implements Command{
                         i++;
                     }
                 }
-                else if (parameters.get(i).equalsIgnoreCase("startswith")){
+                else if (parameters.get(i).equalsIgnoreCase("equals")){
+                    if(parameters.size() != i + 1) {
+                        int finalI = i;
+                        messages.removeIf(curr -> !curr.getContentRaw().equals(parameters.get(finalI+1)));
+                        i++;
+                    }
+                }
+                else if (parameters.get(i).equalsIgnoreCase("startsWith")){
                     if(parameters.size() != i + 1) {
                         int finalI = i;
                         messages.removeIf(curr -> !curr.getContentRaw().toLowerCase().startsWith(parameters.get(finalI+1).toLowerCase()));
                         i++;
                     }
                 }
-                else if (parameters.get(i).equalsIgnoreCase("endswith")){
+                else if (parameters.get(i).equalsIgnoreCase("endsWith")){
                     if(parameters.size() != i + 1) {
                         int finalI = i;
                         messages.removeIf(curr -> !curr.getContentRaw().toLowerCase().endsWith(parameters.get(finalI+1).toLowerCase()));
@@ -75,14 +90,15 @@ public class CommandPurge implements Command{
             }
         }
 
-        if (messages.isEmpty())
-            return;
+        // Delete message with command even when it's not matching applied filters
+        if (!messages.contains(commandMessage))
+            messages.add(commandMessage);
+
+        // You can't use purgeMessages() method on 1 message
         if(messages.size() == 1) {
             messages.get(0).delete().queue();
         }
         else channel.purgeMessages(messages);
-        if(commandMessage != null)
-            commandMessage.delete().queue();
     }
 
     @Override
@@ -98,6 +114,7 @@ public class CommandPurge implements Command{
         commandsWithDescriptions.put("/purge @user", "Deletes specified amount of messages (max 100)");
         commandsWithDescriptions.put("/purge phrase (text)", "Deletes messages containing phrase");
         commandsWithDescriptions.put("/purge has (file/embed)", "Deletes messages containing file or embed");
+        commandsWithDescriptions.put("/purge equals (text)", "Deletes messages containing exact text provided");
         commandsWithDescriptions.put("/purge [count] [@user] [phrase (text)] [has (file / embed)]", "Full command syntax");
         return commandsWithDescriptions;
     }

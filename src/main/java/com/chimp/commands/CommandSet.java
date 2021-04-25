@@ -13,6 +13,10 @@ public abstract class CommandSet {
         commands.put("/help", new CommandHelp());
         commands.put("/kick", new CommandKick());
         commands.put("/purge", new CommandPurge());
+        commands.put("/censor", new CommandCensor());
+        commands.put("/uncensor", new CommandUncensor());
+        commands.put("/censored", new CommandCensored());
+        commands.put("/config", new CommandConfig());
 
         return commands;
     }

@@ -1,6 +1,7 @@
 package com.chimp;
 
 import com.chimp.services.ApplicationService;
+import com.chimp.services.AutoModerator;
 import com.chimp.services.Logger;
 import com.chimp.services.MessageInterpreter;
 import com.chimp.window.WindowMain;
