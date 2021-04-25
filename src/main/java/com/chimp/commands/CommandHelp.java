@@ -29,7 +29,7 @@ public class CommandHelp implements Command{
             String command = "/" + parameters.get(1).toLowerCase();
             if(commands.containsKey(command)){
                 eb.setTitle("Syntax for command `" + command + "`", null);
-                eb.setDescription("Arguments in `[ ]` are optional");
+                eb.setDescription("Arguments in `[ ]` are optional, arguments in `( )` are necessary");
                 Command command1 = commands.get(command);
                 HashMap<String, String> allCommands = command1.getSyntax();
                 for (HashMap.Entry<String, String> commandDescriptions : allCommands.entrySet()) {

@@ -38,9 +38,8 @@ public class MessageInterpreter {
             }
         }
         // Bots are not violating, right?
-        else if (!event.getAuthor().isBot())
+        else if (!event.getAuthor().isBot() && AutoModerator.isEnabled())
             autoModerator.checkViolation(event);
-
     }
 
 //    public String[] splitMessage(String message){
