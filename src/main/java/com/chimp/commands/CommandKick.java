@@ -20,37 +20,32 @@ public class CommandKick implements Command{
         String messageContent = msg.getContentRaw();
         MessageChannel channel = event.getChannel();
 
-        if (msg.getMentionedMembers().isEmpty()){
+        if (msg.getMentionedMembers().isEmpty()) {
             channel.sendMessage("Missing user to kick!").queue();
-            return;
-        }
-        if(parameters.size() < 3) {
+        } else if (parameters.size() < 3) {
             channel.sendMessage("Missing reason!").queue();
-            return;
+        } else {
+            Member target = msg.getMentionedMembers().get(0);
+            if (!Objects.requireNonNull(member).canInteract(target) || !member.hasPermission(Permission.KICK_MEMBERS)) {
+                channel.sendMessage("You need permission to kick!").queue();
+            } else {
+                final Member selfMember = event.getGuild().getSelfMember();
+                if (!selfMember.canInteract(target) || !selfMember.hasPermission(Permission.KICK_MEMBERS)) {
+                    event.getChannel().sendMessage("I don't have permission to kick!").queue();
+                } else {
+                    String reason = parameters.get(2);
+                    event.getGuild()
+                            .kick(target, reason)
+                            .reason(reason)
+                            .queue(
+                                    (__) -> event.getChannel().sendMessage("Kick was successful").queue(),
+                                    (error) -> event.getChannel().sendMessageFormat("Could not kick %s", error.getMessage()).queue()
+                            );
+                }
+            }
         }
 
-        Member target = msg.getMentionedMembers().get(0);
-        if (!Objects.requireNonNull(member).canInteract(target) || !member.hasPermission(Permission.KICK_MEMBERS)) {
-            channel.sendMessage("You need permission to kick!").queue();
-            return;
-        }
 
-        final Member selfMember = event.getGuild().getSelfMember();
-
-        if (!selfMember.canInteract(target) || !selfMember.hasPermission(Permission.KICK_MEMBERS)) {
-            event.getChannel().sendMessage("I don't have permission to kick!").queue();
-            return;
-        }
-
-
-        String reason = parameters.get(2);
-        event.getGuild()
-                .kick(target, reason)
-                .reason(reason)
-                .queue(
-                        (__) -> event.getChannel().sendMessage("Kick was successful").queue(),
-                        (error) -> event.getChannel().sendMessageFormat("Could not kick %s", error.getMessage()).queue()
-                );
     }
 
     @Override

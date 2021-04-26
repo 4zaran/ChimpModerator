@@ -12,38 +12,39 @@ import java.util.TreeMap;
 public class CommandHelp implements Command{
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
+        boolean finished = false;
         TreeMap<String, Command> commands = CommandSet.getCommands();
         StringBuilder descriptions = new StringBuilder();
         StringBuilder syntax = new StringBuilder();
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
-        if(parameters.size() == 1){
+        if (parameters.size() == 1) {
             eb.setTitle("Available commands", null);
             eb.setDescription("Note: use `/help [command]` for additional info");
 
             for (HashMap.Entry<String, Command> entry : commands.entrySet()) {
-                eb.addField("`" + entry.getKey() + "`",entry.getValue().getDescription(),false);
+                eb.addField("`" + entry.getKey() + "`", entry.getValue().getDescription(), false);
             }
-        }
-        else{
+        } else {
             String command = "/" + parameters.get(1).toLowerCase();
-            if(commands.containsKey(command)){
+            if (commands.containsKey(command)) {
                 eb.setTitle("Syntax for command `" + command + "`", null);
                 eb.setDescription("Arguments in `[ ]` are optional, arguments in `( )` are necessary");
                 Command command1 = commands.get(command);
                 TreeMap<String, String> allCommands = command1.getSyntax();
                 for (HashMap.Entry<String, String> commandDescriptions : allCommands.entrySet()) {
-                    eb.addField("`" + commandDescriptions.getKey()+ "`",commandDescriptions.getValue(),false);
+                    eb.addField("`" + commandDescriptions.getKey() + "`", commandDescriptions.getValue(), false);
                 }
-            }
-            else{
+            } else {
                 event.getChannel().sendMessage("No such command!").queue();
-                return;
+                finished = true;
             }
         }
+        if (!finished) {
+            event.getChannel().sendMessage(eb.build()).queue();
+        }
 
-        event.getChannel().sendMessage(eb.build()).queue();
     }
 
     @Override
