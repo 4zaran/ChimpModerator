@@ -36,14 +36,14 @@ public class BadUser {
         violationAmount++;
         if(state == BehaviourState.WARNED){
             textChannel.sendMessage(
-                    String.format("**Warning** <@!%s>! You have violated the rules!\nWarnings issued: %d\nGetting more than %d warnings will cause a kick or ban from server!",
+                    String.format("**Warning** <@!%s>! You have violated the rules!\nWarnings issued: %d\nGetting more than %d warnings will cause a kick or ban from the server!",
                             user.getId(),
                             violationAmount,
                             AutoModerator.getWarnAmount())).queue();
         }
         if(state == BehaviourState.KICKED){
             textChannel.sendMessage(
-                    String.format("**Kicking** <@!%s> for violating the rules. \nKicks issued: %d\nGetting more than %d kicks will cause ban from server!",
+                    String.format("**Kicking** <@!%s> for violating the rules. \nKicks issued: %d\nGetting more than %d kicks will cause ban from the server!",
                             user.getId(),
                             violationAmount,
                             AutoModerator.getKickAmount())).queue();

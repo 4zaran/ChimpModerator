@@ -21,9 +21,13 @@ public class ApplicationMain extends ListenerAdapter {
         // Initialize variables
         WindowMain window = new WindowMain();
         logger = new Logger(window);
+
+        interpreter = new MessageInterpreter();
+        logger.logInfo(interpreter.getCommandCount());
+
         ApplicationService jda = new ApplicationService();
         jda.connect();
-        interpreter = new MessageInterpreter();
+
         WindowManager manager = new WindowManager(jda, window);
     }
 

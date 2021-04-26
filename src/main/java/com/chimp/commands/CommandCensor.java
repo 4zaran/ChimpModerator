@@ -12,9 +12,16 @@ public class CommandCensor implements Command{
 
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        if(parameters.size() == 2){
-            AutoModerator.censor(parameters.get(1));
-            event.getTextChannel().sendMessage("Censoring: " + parameters.get(1)).queue();
+        if(parameters.size() >= 2){
+            int i = 1;
+            StringBuilder exp = new StringBuilder();
+            while (i < parameters.size()) {
+                //TODO error on already censored
+                AutoModerator.censor(parameters.get(i));
+                exp.append(parameters.get(i)).append(", ");
+                i++;
+            }
+            event.getTextChannel().sendMessage("Censoring: " + exp).queue();
         }
         else{
             event.getTextChannel().sendMessage("Invalid syntax!").queue();
@@ -30,6 +37,7 @@ public class CommandCensor implements Command{
     public TreeMap<String, String> getSyntax() {
         TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/censor (text)", "Censores given string");
+        commandsWithDescriptions.put("/censor (text) (text2)", "It is possible to censor multiple expressions with single command");
         return commandsWithDescriptions;
     }
 }

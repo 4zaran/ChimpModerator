@@ -17,14 +17,16 @@ public class CommandKick implements Command{
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         Message msg = event.getMessage();
         Member member = event.getMember();
-        String messageContent = msg.getContentRaw();
+        String reason;
         MessageChannel channel = event.getChannel();
 
         if (msg.getMentionedMembers().isEmpty()) {
             channel.sendMessage("Missing user to kick!").queue();
-        } else if (parameters.size() < 3) {
-            channel.sendMessage("Missing reason!").queue();
         } else {
+            if (parameters.size() < 3)
+                reason = "No reason provided";
+            else
+                reason = parameters.get(2);
             Member target = msg.getMentionedMembers().get(0);
             if (!Objects.requireNonNull(member).canInteract(target) || !member.hasPermission(Permission.KICK_MEMBERS)) {
                 channel.sendMessage("You need permission to kick!").queue();
@@ -33,7 +35,6 @@ public class CommandKick implements Command{
                 if (!selfMember.canInteract(target) || !selfMember.hasPermission(Permission.KICK_MEMBERS)) {
                     event.getChannel().sendMessage("I don't have permission to kick!").queue();
                 } else {
-                    String reason = parameters.get(2);
                     event.getGuild()
                             .kick(target, reason)
                             .reason(reason)
@@ -57,6 +58,7 @@ public class CommandKick implements Command{
     public TreeMap<String, String> getSyntax() {
         TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/kick @user \"Reason of kick\"", "Kicks user from server with specifed reason");
+        commandsWithDescriptions.put("/kick @user", "Kicks user from server");
         return commandsWithDescriptions;
     }
 }

@@ -111,12 +111,12 @@ public class CommandPurge implements Command{
     public TreeMap<String, String> getSyntax() {
         TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/purge", "Deletes 10 messages");
-        commandsWithDescriptions.put("/purge [count]", "Deletes specified amount of messages (max 100)");
+        commandsWithDescriptions.put("/purge [amount]", "Deletes specified amount of messages (max 100)");
         commandsWithDescriptions.put("/purge @user", "Deletes specified amount of messages (max 100)");
         commandsWithDescriptions.put("/purge phrase (text)", "Deletes messages containing phrase");
         commandsWithDescriptions.put("/purge has (file/embed)", "Deletes messages containing file or embed");
         commandsWithDescriptions.put("/purge equals (text)", "Deletes messages containing exact text provided");
-        commandsWithDescriptions.put("/purge [count] [@user] [phrase (text)] [has (file / embed)]", "Full command syntax");
+        commandsWithDescriptions.put("/purge [amount] (other filters)", "Full command syntax. Note that you can use multiple filters in one comamnd but the `amount` field must be the first argument");
         return commandsWithDescriptions;
     }
 

@@ -73,4 +73,8 @@ public class MessageInterpreter {
             parameters.add(m.group(1).replace("\"", ""));
         return parameters;
     }
+
+    public String getCommandCount(){
+        return ("Loaded " + commands.size() + " valid commands.");
+    }
 }

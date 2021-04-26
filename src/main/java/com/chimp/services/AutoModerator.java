@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class AutoModerator {
@@ -80,6 +79,7 @@ public class AutoModerator {
                     badUsers.add(violator);
                 }
                 violator.hasViolated(event.getTextChannel());
+                break;
             }
         }
     }

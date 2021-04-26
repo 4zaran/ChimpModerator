@@ -10,7 +10,7 @@ public class WindowMain extends JFrame {
     private JScrollPane logScrollPane;
 
     public WindowMain() {
-        super("Main Window");
+        super("Chimp Window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocation(50, 50);
         setLayout(new GridBagLayout());

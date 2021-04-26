@@ -19,6 +19,7 @@ public abstract class CommandSet {
         commands.put("/censored", new CommandCensored());
         commands.put("/config", new CommandConfig());
         commands.put("/role", new CommandRole());
+        commands.put("/roles", new CommandRoles());
 
         return commands;
     }
