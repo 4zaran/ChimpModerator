@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 public class CommandUncensor implements Command{
     @Override
@@ -20,13 +21,13 @@ public class CommandUncensor implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Used to remove provided text from censored expressions";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/uncensor (text)", "Uncensores given string");
         return commandsWithDescriptions;
     }

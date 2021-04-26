@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 public class CommandConfig implements Command{
     @Override
@@ -61,13 +62,13 @@ public class CommandConfig implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Used to config bot";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/config warn", "Displays amount of warnings performed before next punishment");
         commandsWithDescriptions.put("/config warn (count)", "Sets the warnings performed before next punishment");
         commandsWithDescriptions.put("/config kick", "Displays amount of kicks performed before banning user");

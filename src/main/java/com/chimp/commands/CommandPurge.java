@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Used to mass-delete messages
@@ -102,13 +103,13 @@ public class CommandPurge implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Used to delete messages";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/purge", "Deletes 10 messages");
         commandsWithDescriptions.put("/purge [count]", "Deletes specified amount of messages (max 100)");
         commandsWithDescriptions.put("/purge @user", "Deletes specified amount of messages (max 100)");

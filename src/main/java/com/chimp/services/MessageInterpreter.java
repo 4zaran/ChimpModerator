@@ -6,15 +6,15 @@ import com.chimp.commands.CommandSet;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class MessageInterpreter {
-    private final HashMap<String, Command> commands;
+    private final TreeMap<String, Command> commands;
     private AutoModerator autoModerator;
 
 

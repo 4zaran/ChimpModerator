@@ -7,26 +7,26 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class CommandBan implements Command{
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         Message msg = event.getMessage();
         Member member = event.getMember();
-        String messageContent = msg.getContentRaw();
         MessageChannel channel = event.getChannel();
+        String reason;
 
         if (msg.getMentionedMembers().isEmpty()){
             channel.sendMessage("Missing user to ban!").queue();
             return;
         }
-        if(parameters.size() < 3) {
-            channel.sendMessage("Missing reason!").queue();
-            return;
-        }
+        if(parameters.size() < 3)
+            reason = "No reason provided";
+        else
+            reason = parameters.get(2);
 
         Member target = msg.getMentionedMembers().get(0);
         if (!Objects.requireNonNull(member).canInteract(target) || !member.hasPermission(Permission.BAN_MEMBERS)) {
@@ -40,8 +40,7 @@ public class CommandBan implements Command{
             event.getChannel().sendMessage("I don't have permission to ban members!").queue();
             return;
         }
-
-        String reason = parameters.get(2);
+//        event.getTextChannel().sendMessage("Banning user with ....").queue();
         event.getGuild()
                 .ban(target,0, reason)
                 .reason(reason)
@@ -52,14 +51,15 @@ public class CommandBan implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Used to ban user from server";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
-        commandsWithDescriptions.put("/ban @user \"reason of ban\"", "Bans specified user");
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
+        commandsWithDescriptions.put("/ban @user \"reason of ban\"", "Bans specified user with specified reason");
+        commandsWithDescriptions.put("/ban @user", "Bans specified user");
         return commandsWithDescriptions;
     }
 }

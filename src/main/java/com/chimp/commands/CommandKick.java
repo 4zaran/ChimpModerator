@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class CommandKick implements Command{
     @Override
@@ -53,13 +54,13 @@ public class CommandKick implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Used to kick user from server";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/kick @user \"Reason of kick\"", "Kicks user from server with specifed reason");
         return commandsWithDescriptions;
     }

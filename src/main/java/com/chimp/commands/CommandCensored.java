@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 public class CommandCensored implements Command{
     @Override
@@ -17,13 +18,13 @@ public class CommandCensored implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Displays current censored expressions";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/censored", "Sends list of censored expressions");
         return commandsWithDescriptions;
     }

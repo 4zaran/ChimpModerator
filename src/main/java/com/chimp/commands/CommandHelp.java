@@ -7,11 +7,12 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 public class CommandHelp implements Command{
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        HashMap<String, Command> commands = CommandSet.getCommands();
+        TreeMap<String, Command> commands = CommandSet.getCommands();
         StringBuilder descriptions = new StringBuilder();
         StringBuilder syntax = new StringBuilder();
 
@@ -31,7 +32,7 @@ public class CommandHelp implements Command{
                 eb.setTitle("Syntax for command `" + command + "`", null);
                 eb.setDescription("Arguments in `[ ]` are optional, arguments in `( )` are necessary");
                 Command command1 = commands.get(command);
-                HashMap<String, String> allCommands = command1.getSyntax();
+                TreeMap<String, String> allCommands = command1.getSyntax();
                 for (HashMap.Entry<String, String> commandDescriptions : allCommands.entrySet()) {
                     eb.addField("`" + commandDescriptions.getKey()+ "`",commandDescriptions.getValue(),false);
                 }
@@ -46,13 +47,13 @@ public class CommandHelp implements Command{
     }
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Displays help";
     }
 
     @Override
-    public @NotNull HashMap<String, String> getSyntax() {
-        HashMap<String, String> commandsWithDescriptions= new HashMap<>();
+    public TreeMap<String, String> getSyntax() {
+        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
         commandsWithDescriptions.put("/help", "Displays help");
         commandsWithDescriptions.put("/help [command]", "Displays syntax for specified command");
         return commandsWithDescriptions;

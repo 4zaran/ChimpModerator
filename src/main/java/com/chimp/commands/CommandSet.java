@@ -1,12 +1,13 @@
 package com.chimp.commands;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public abstract class CommandSet {
-    private static HashMap<String, Command> commands;
+    private static TreeMap<String, Command> commands;
 
-    public static HashMap<String, Command> getCommands(){
-        commands = new HashMap<>();
+    public static TreeMap<String, Command> getCommands(){
+        commands = new TreeMap<>();
 
         commands.put("/ban", new CommandBan());
         commands.put("/exit", new CommandExit());
