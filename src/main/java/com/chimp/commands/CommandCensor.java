@@ -4,7 +4,6 @@ import com.chimp.services.AutoModerator;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -14,14 +13,30 @@ public class CommandCensor implements Command{
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         if(parameters.size() >= 2){
             int i = 1;
+            StringBuilder ans = new StringBuilder();
             StringBuilder exp = new StringBuilder();
+            StringBuilder ext = new StringBuilder();
             while (i < parameters.size()) {
                 //TODO error on already censored
-                AutoModerator.censor(parameters.get(i));
-                exp.append(parameters.get(i)).append(", ");
+                if (AutoModerator.censor(parameters.get(i))){
+                    if(!exp.toString().isEmpty())
+                        exp.append(", ").append(parameters.get(i));
+                    else
+                        exp.append(parameters.get(i));
+                }
+                else{
+                    if(!ext.toString().isEmpty())
+                        ext.append(", ").append(parameters.get(i));
+                    else
+                        ext.append(parameters.get(i));
+                }
                 i++;
             }
-            event.getTextChannel().sendMessage("Censoring: " + exp).queue();
+            if(!exp.toString().isEmpty())
+                ans.append("Censoring: ").append(exp).append('\n');
+            if(!ext.toString().isEmpty())
+                ans.append("Already censored: ").append(ext);
+            event.getTextChannel().sendMessage(ans).queue();
         }
         else{
             event.getTextChannel().sendMessage("Invalid syntax!").queue();

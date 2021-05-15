@@ -1,17 +1,14 @@
 package com.chimp.services;
 
 import com.chimp.commands.Command;
-import com.chimp.commands.CommandSet;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class MessageInterpreter {
     private final TreeMap<String, Command> commands;

@@ -4,14 +4,15 @@ import com.chimp.ApplicationMain;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-
 import javax.security.auth.login.LoginException;
 
 public class ApplicationService {
     private JDA jda;
     private final JDABuilder jdaBuild;
+    private Logger logger;
 
-    public ApplicationService() {
+    public ApplicationService(Logger logger) {
+        this.logger = logger;
         String TOKEN = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
         jdaBuild = JDABuilder.createDefault(TOKEN)
                 .addEventListeners(new ApplicationMain());
@@ -22,7 +23,8 @@ public class ApplicationService {
             jda = jdaBuild.build();
             jda.awaitReady();
         } catch (LoginException | InterruptedException le) {
-            System.out.println(le.getMessage());
+            logger.logError(le.getMessage());
+            // System.out.println(le.getMessage());
         }
     }
 

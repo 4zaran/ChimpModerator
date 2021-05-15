@@ -1,6 +1,7 @@
-package com.chimp.commands;
+package com.chimp.services;
 
-import java.util.HashMap;
+import com.chimp.commands.*;
+
 import java.util.TreeMap;
 
 public abstract class CommandSet {
@@ -20,6 +21,7 @@ public abstract class CommandSet {
         commands.put("/config", new CommandConfig());
         commands.put("/role", new CommandRole());
         commands.put("/roles", new CommandRoles());
+        // commands.put("/mute", new CommandMute());
 
         return commands;
     }

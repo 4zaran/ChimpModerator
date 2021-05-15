@@ -45,8 +45,12 @@ public class AutoModerator {
                 '}';
     }
 
-    public static void censor(String expression){
-        censoredExpressions.add(expression);
+    public static boolean censor(String expression){
+        if(!censoredExpressions.contains(expression)) {
+            censoredExpressions.add(expression);
+            return true;
+        }
+        else return false;
     }
     public static void uncensor(String expression){
         censoredExpressions.remove(expression);

@@ -1,5 +1,6 @@
 package com.chimp.commands;
 
+import com.chimp.services.CommandSet;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +15,6 @@ public class CommandHelp implements Command{
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         boolean finished = false;
         TreeMap<String, Command> commands = CommandSet.getCommands();
-        StringBuilder descriptions = new StringBuilder();
-        StringBuilder syntax = new StringBuilder();
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
@@ -58,15 +57,5 @@ public class CommandHelp implements Command{
         commandsWithDescriptions.put("/help", "Displays help");
         commandsWithDescriptions.put("/help [command]", "Displays syntax for specified command");
         return commandsWithDescriptions;
-    }
-
-    public EmbedBuilder embedTest(){
-        // Create the EmbedBuilder instance
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Title", null);
-        eb.setColor(Color.red);
-        eb.setDescription("Text");
-        eb.addField("Title of field", "test of field", false);
-        return eb;
     }
 }

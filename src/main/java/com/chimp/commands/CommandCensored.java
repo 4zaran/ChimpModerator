@@ -5,10 +5,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.css.RGBColor;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 

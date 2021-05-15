@@ -4,7 +4,6 @@ import com.chimp.services.AutoModerator;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
