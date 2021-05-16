@@ -15,26 +15,25 @@ public class ApplicationMain extends ListenerAdapter {
     private static Logger logger;
     private static MessageInterpreter interpreter;
     private static WindowMain window;
+    private static ApplicationService jda;
+    private static WindowManager manager;
 
     public static void main(String[] args) {
         window = new WindowMain();
         logger = new Logger(window);
-
         interpreter = new MessageInterpreter();
-        logger.logInfo(interpreter.getCommandCount());
+        jda = new ApplicationService(logger);
+        manager = new WindowManager(jda, window);
 
-        ApplicationService jda = new ApplicationService(logger);
+        logger.logInfo(interpreter.getCommandCount());
         jda.connect();
 
-        WindowManager manager = new WindowManager(jda, window);
     }
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
         logger.logInfo("Connected!");
-        window.sendButton.setEnabled(true);
-        window.messageTextField.setEnabled(true);
-        window.messageTextField.setText("");
+        manager.setupWindow();
     }
 
     @Override

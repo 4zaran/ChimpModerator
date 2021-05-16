@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -53,25 +54,31 @@ public class Logger {
         if(messageContent.toString().endsWith("\n"))
             messageContent.deleteCharAt(messageContent.length() - 1);
 
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm");
-        String formattedDate = myDateObj.format(myFormatObj);
-
-        String[] messageFragments = {formattedDate + " ", messageContent.toString()};
+        String[] messageFragments = {getTime() + " ", messageContent.toString()};
         Color[] colors = {Color.gray, Color.BLACK};
 
-        window.printText(messageFragments, colors);
+        String textChannelName = event.getTextChannel().getName() + "@" + event.getGuild().getName();
+        window.printText(messageFragments, colors, textChannelName);
+    }
+
+    @NotNull
+    private String getTime() {
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("HH:mm");
+        return myDateObj.format(myFormatObj);
     }
 
     public void logInfo(String info){
-        String[] messageFragments = {"[INFO]: ", info};
-        Color[] colors = {new Color(31, 158, 31), Color.BLACK};
-        window.printText(messageFragments, colors);
+        String[] messageFragments = {getTime() + " ", "[INFO]: ", info};
+        Color[] colors = {Color.gray, new Color(31, 158, 31), Color.BLACK};
+        String textChannelName = "console";
+        window.printText(messageFragments, colors, textChannelName);
     }
 
     public void logError(String error){
-        String[] messageFragments = {"[ERROR]: ", error};
-        Color[] colors = {Color.RED, Color.BLACK};
-        window.printText(messageFragments, colors);
+        String[] messageFragments = {getTime() + " ", "[ERROR]: ", error};
+        Color[] colors = {Color.gray, Color.RED, Color.BLACK};
+        String textChannelName = "console";
+        window.printText(messageFragments, colors, textChannelName);
     }
 }

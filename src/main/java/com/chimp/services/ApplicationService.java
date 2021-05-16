@@ -8,8 +8,8 @@ import javax.security.auth.login.LoginException;
 
 public class ApplicationService {
     private JDA jda;
+    private final Logger logger;
     private final JDABuilder jdaBuild;
-    private Logger logger;
 
     public ApplicationService(Logger logger) {
         this.logger = logger;
@@ -24,7 +24,6 @@ public class ApplicationService {
             jda.awaitReady();
         } catch (LoginException | InterruptedException le) {
             logger.logError(le.getMessage());
-            // System.out.println(le.getMessage());
         }
     }
 
