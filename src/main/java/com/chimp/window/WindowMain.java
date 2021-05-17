@@ -24,6 +24,7 @@ public class WindowMain extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocation(50, 50);
         setMinimumSize(new Dimension(400, 300));
+        setPreferredSize(new Dimension(400, 500));
         setLayout(new GridBagLayout());
 
         createUIElements();
@@ -42,14 +43,6 @@ public class WindowMain extends JFrame {
         // logTextArea.setLineWrap(true);
         logTextArea.setMargin(new Insets(5, 5, 5, 5));
         return logTextArea;
-    }
-
-    private JScrollPane logScrollPane(JTextPane area) {
-        JScrollPane logScrollPane = new JScrollPane(area,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        logScrollPane.setPreferredSize(new Dimension(300, 400));
-        return logScrollPane;
     }
 
     private void createUIElements() {
@@ -83,7 +76,9 @@ public class WindowMain extends JFrame {
 
         logPanes = new HashMap<>();
         logPanes.put("console", createLogTextArea());
-        logScrollPane = logScrollPane(logPanes.get("console"));
+        logScrollPane = new JScrollPane((logPanes.get("console")),
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         insets = new Insets(5, 5, 0, 5);
         addObjects(logScrollPane, layoutConstraints, GridBagConstraints.BOTH,
                 0, 1, 4,
@@ -133,6 +128,7 @@ public class WindowMain extends JFrame {
             printText("Printing error...", Color.RED, channel);
         }
     }
+
     public void printText(String text, Color c, String channel) {
         printText(text, c, true, channel);
     }
@@ -161,6 +157,7 @@ public class WindowMain extends JFrame {
 
     public void switchLogArea(String areaName){
         JTextPane area = logPanes.get(areaName);
+        //TODO change name to channelID@guildID
         if(area == null){
             logPanes.put(areaName, createLogTextArea());
             switchLogArea(areaName);
