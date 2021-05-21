@@ -25,6 +25,7 @@ public class ApplicationMain extends ListenerAdapter {
         jda = new ApplicationService(logger);
         manager = new WindowManager(jda, window);
 
+        manager.setupConsole();
         logger.logInfo(interpreter.getCommandCount());
         jda.connect();
 

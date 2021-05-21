@@ -62,6 +62,9 @@ public class WindowManager extends WindowAdapter {
         window.dispose();
         jda.disconnect();
     }
+    public void setupConsole(){
+        switchToConsole();
+    }
     public void setupWindow(){
         List<Guild> guilds = jda.getJda().getGuilds();
         for (Guild guild: guilds) {
@@ -69,12 +72,10 @@ public class WindowManager extends WindowAdapter {
             List<TextChannel> textChannels = guild.getTextChannels();
             for(TextChannel textChannel: textChannels){
                 String channelName = textChannel.getName() + "@" + guild.getName();
-                window.switchLogArea(channelName);
+                window.addLogArea(channelName);
             }
         }
-
         window.guildsBox.setEnabled(true);
-        switchToConsole();
     }
 
     private void switchToConsole(){

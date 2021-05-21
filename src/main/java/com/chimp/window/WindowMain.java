@@ -76,7 +76,7 @@ public class WindowMain extends JFrame {
 
         logPanes = new HashMap<>();
         logPanes.put("console", createLogTextArea());
-        logScrollPane = new JScrollPane((logPanes.get("console")),
+        this.logScrollPane = new JScrollPane((logPanes.get("console")),
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         insets = new Insets(5, 5, 0, 5);
@@ -155,11 +155,15 @@ public class WindowMain extends JFrame {
         return messageToSend;
     }
 
+    public void addLogArea(String areaName){
+        logPanes.put(areaName, createLogTextArea());
+    }
+
     public void switchLogArea(String areaName){
         JTextPane area = logPanes.get(areaName);
         //TODO change name to channelID@guildID
         if(area == null){
-            logPanes.put(areaName, createLogTextArea());
+            addLogArea(areaName);
             switchLogArea(areaName);
         }
         else{

@@ -12,8 +12,7 @@ import java.util.regex.Pattern;
 
 public class MessageInterpreter {
     private final TreeMap<String, Command> commands;
-    private AutoModerator autoModerator;
-
+    private final AutoModerator autoModerator;
 
     public MessageInterpreter(){
         commands = CommandSet.getCommands();
@@ -39,30 +38,6 @@ public class MessageInterpreter {
             autoModerator.checkViolation(event);
     }
 
-//    public String[] splitMessage(String message){
-//        String[] parameters = message.split("\\s+");
-//        if(message.contains("\"")){
-//            // Check if quote marks are even
-//            int quoteCount = 0;
-//            for (int i = 0; i < message.length(); i++) {
-//                if (message.charAt(i) == '\"')
-//                    quoteCount++;
-//            }
-//            if(quoteCount % 2 == 0){
-//                for (String parameter : parameters) {
-//                    if (parameter.contains("\"")) {
-//
-//                    }
-//                }
-//            }
-//            else{
-//                // exception...
-//            }
-//
-//        }
-//        return parameters;
-//    }
-
     public List<String> splitMessage(String message){
         List<String> parameters = new ArrayList<>();
         Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(message);
@@ -75,3 +50,30 @@ public class MessageInterpreter {
         return ("Loaded " + commands.size() + " valid commands.");
     }
 }
+
+
+/*
+    public String[] splitMessage(String message){
+        String[] parameters = message.split("\\s+");
+        if(message.contains("\"")){
+            // Check if quote marks are even
+            int quoteCount = 0;
+            for (int i = 0; i < message.length(); i++) {
+                if (message.charAt(i) == '\"')
+                    quoteCount++;
+            }
+            if(quoteCount % 2 == 0){
+                for (String parameter : parameters) {
+                    if (parameter.contains("\"")) {
+
+                    }
+                }
+            }
+            else{
+                // exception...
+            }
+
+        }
+        return parameters;
+    }
+*/
