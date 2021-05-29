@@ -51,7 +51,7 @@ public class CommandCensor implements Command{
     @Override
     public TreeMap<String, String> getSyntax() {
         TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
-        commandsWithDescriptions.put("/censor (text)", "Censores given string");
+        commandsWithDescriptions.put("/censor (text)", "Censors given string");
         commandsWithDescriptions.put("/censor (text) (text2)", "It is possible to censor multiple expressions with single command");
         return commandsWithDescriptions;
     }

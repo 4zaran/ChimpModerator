@@ -69,14 +69,14 @@ public class Logger {
     }
 
     public void logInfo(String info){
-        String[] messageFragments = {getTime() + " ", "[INFO]: ", info};
+        String[] messageFragments = {getTime(), " [INFO]: ", info};
         Color[] colors = {Color.gray, new Color(31, 158, 31), Color.BLACK};
         String textChannelName = "console";
         window.printText(messageFragments, colors, textChannelName);
     }
 
     public void logError(String error){
-        String[] messageFragments = {getTime() + " ", "[ERROR]: ", error};
+        String[] messageFragments = {getTime() + " [ERROR]: ", error};
         Color[] colors = {Color.gray, Color.RED, Color.BLACK};
         String textChannelName = "console";
         window.printText(messageFragments, colors, textChannelName);

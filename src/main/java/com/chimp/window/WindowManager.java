@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class WindowManager extends WindowAdapter {
-    private ApplicationService jda;
-    private WindowMain window;
+    private final ApplicationService jda;
+    private final WindowMain window;
 
     public WindowManager(ApplicationService jda, WindowMain window){
         this.window = window;
         window.addWindowListener(this);
         this.jda = jda;
 
-        window.sendButton.addActionListener(e -> sendMessage());
+        window.getSendButton().addActionListener(e -> sendMessage());
 
-        window.messageTextField.addKeyListener(new KeyListener() {
+        window.getMessageTextField().addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
             }
@@ -36,27 +36,21 @@ public class WindowManager extends WindowAdapter {
             }
         });
 
-        window.guildsBox.addActionListener(e -> {
-            if(window.guildsBox.getSelectedIndex() != 0)
+        window.getGuildsBox().addActionListener(e -> {
+            if(window.getGuildsBox().getSelectedIndex() != 0)
                 switchToServer();
             else
                 switchToConsole();
         });
 
-        window.textChannelsBox.addItemListener(e -> {
+        window.getTextChannelsBox().addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                String channelName = Objects.requireNonNull(window.textChannelsBox.getSelectedItem()) + "@" + Objects.requireNonNull(window.guildsBox.getSelectedItem());
+                String channelName = Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem()) + "@" + Objects.requireNonNull(window.getGuildsBox().getSelectedItem());
                 window.switchLogArea(channelName);
             }
         });
     }
 
-    private void sendMessage() {
-        String messageToSend = window.getMessageText();
-        TextChannel textChannel = jda.getTextChannel(Objects.requireNonNull(window.textChannelsBox.getSelectedItem()).toString());
-        if (!Objects.equals(messageToSend, ""))
-            textChannel.sendMessage(messageToSend).queue();
-    }
     @Override
     public void windowClosing(WindowEvent e) {
         window.dispose();
@@ -68,40 +62,46 @@ public class WindowManager extends WindowAdapter {
     public void setupWindow(){
         List<Guild> guilds = jda.getJda().getGuilds();
         for (Guild guild: guilds) {
-            window.guildsBox.addItem(guild.getName());
+            window.getGuildsBox().addItem(guild.getName());
             List<TextChannel> textChannels = guild.getTextChannels();
             for(TextChannel textChannel: textChannels){
                 String channelName = textChannel.getName() + "@" + guild.getName();
                 window.addLogArea(channelName);
             }
         }
-        window.guildsBox.setEnabled(true);
+        window.getGuildsBox().setEnabled(true);
     }
 
+    private void sendMessage() {
+        String messageToSend = window.getMessageText();
+        TextChannel textChannel = jda.getTextChannel(Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem()).toString());
+        if (!Objects.equals(messageToSend, ""))
+            textChannel.sendMessage(messageToSend).queue();
+    }
     private void switchToConsole(){
         window.switchLogArea("console");
-        window.sendButton.setEnabled(false);
-        if(window.textChannelsBox.getItemCount() > 0)
-            window.textChannelsBox.removeAllItems();
-        window.textChannelsBox.setEnabled(false);
-        window.messageTextField.setEnabled(false);
-        window.messageTextField.setText("Choose server to send messages...");
+        window.getSendButton().setEnabled(false);
+        if(window.getTextChannelsBox().getItemCount() > 0)
+            window.getTextChannelsBox().removeAllItems();
+        window.getTextChannelsBox().setEnabled(false);
+        window.getMessageTextField().setEnabled(false);
+        window.getMessageTextField().setText("Choose server to send messages...");
     }
-
     private void switchToServer(){
-        window.messageTextField.setText("");
-        window.sendButton.setEnabled(true);
-        window.textChannelsBox.removeAllItems();
-        window.textChannelsBox.setEnabled(true);
-        window.messageTextField.setEnabled(true);
+        window.getMessageTextField().setText("");
+        window.getSendButton().setEnabled(true);
+        window.getTextChannelsBox().removeAllItems();
+        window.getTextChannelsBox().setEnabled(true);
+        window.getMessageTextField().setEnabled(true);
 
-        List<Guild> guilds = jda.getJda().getGuildsByName(Objects.requireNonNull(window.guildsBox.getSelectedItem()).toString(), false);
+        List<Guild> guilds = jda.getJda().getGuildsByName(Objects.requireNonNull(window.getGuildsBox().getSelectedItem()).toString(), false);
         if(guilds.size() > 0) {
             for (TextChannel channel : guilds.get(0).getTextChannels()) {
-                window.textChannelsBox.addItem(channel.getName());
+                window.getTextChannelsBox().addItem(channel.getName());
             }
         }
-        String channelName = Objects.requireNonNull(window.textChannelsBox.getSelectedItem()) + "@" + window.guildsBox.getSelectedItem().toString();
+        String channelName = Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem()) + "@" + window.getGuildsBox().getSelectedItem().toString();
         window.switchLogArea(channelName);
     }
 }
+// TODO wchłonięcie funkcji

@@ -1,57 +1,41 @@
+com/chimp/services/CommandSet.java
+ com.chimp.services.CommandSet
+com/chimp/commands/CommandPurge.java
+ com.chimp.commands.CommandPurge
+com/chimp/commands/CommandHelp.java
+ com.chimp.commands.CommandHelp
+com/chimp/commands/CommandBan.java
+ com.chimp.commands.CommandBan
+com/chimp/commands/CommandRole.java
+ com.chimp.commands.CommandRole
+com/chimp/moderation/BehaviourState.java
+ com.chimp.moderation.BehaviourState
+com/chimp/window/ComboItem.java
+ com.chimp.window.ComboItem
+com/chimp/commands/Command.java
+ com.chimp.commands.Command
+com/chimp/commands/CommandCensor.java
+ com.chimp.commands.CommandCensor
+com/chimp/commands/CommandCensored.java
+ com.chimp.commands.CommandCensored
+com/chimp/commands/CommandExit.java
+ com.chimp.commands.CommandExit
+com/chimp/commands/CommandKick.java
+ com.chimp.commands.CommandKick
+com/chimp/commands/CommandRoles.java
+ com.chimp.commands.CommandRoles
+com/chimp/commands/CommandUncensor.java
+ com.chimp.commands.CommandUncensor
 com/chimp/services/Test.java
  com.chimp.services.Test
  com.chimp.services.Test$1
  com.chimp.services.Test$2
  com.chimp.services.Test$3
  com.chimp.services.Test$4
-com/chimp/test/MainWindow.java
- com.chimp.test.MainWindow
-com/chimp/moderation/BehaviourState.java
- com.chimp.moderation.BehaviourState
-com/chimp/services/AutoModerator.java
- com.chimp.services.AutoModerator
-com/chimp/commands/CommandExit.java
- com.chimp.commands.CommandExit
-com/chimp/commands/CommandRoles.java
- com.chimp.commands.CommandRoles
-com/chimp/window/WindowMain.java
- com.chimp.window.WindowMain
-com/chimp/commands/CommandHelp.java
- com.chimp.commands.CommandHelp
-com/chimp/commands/CommandUncensor.java
- com.chimp.commands.CommandUncensor
-com/chimp/test/JDAService.java
- com.chimp.test.JDAService
-com/chimp/commands/CommandRole.java
- com.chimp.commands.CommandRole
-com/chimp/moderation/BadUser.java
- com.chimp.moderation.BadUser
 com/chimp/commands/CommandConfig.java
  com.chimp.commands.CommandConfig
-com/chimp/commands/CommandKick.java
- com.chimp.commands.CommandKick
 com/chimp/services/MessageInterpreter.java
  com.chimp.services.MessageInterpreter
-com/chimp/test/test2.java
- com.chimp.test.Bot
- com.chimp.test.Bot$1
- com.chimp.test.Bot$2
- com.chimp.test.test2
-com/chimp/window/ComboItem.java
- com.chimp.window.ComboItem
-com/chimp/commands/CommandCensored.java
- com.chimp.commands.CommandCensored
-com/chimp/commands/Command.java
- com.chimp.commands.Command
-com/chimp/test/test.java
- com.chimp.test.WindowMain
- com.chimp.test.test
-com/chimp/services/Logger.java
- com.chimp.services.Logger
-com/chimp/commands/CommandBan.java
- com.chimp.commands.CommandBan
-com/chimp/commands/CommandCensor.java
- com.chimp.commands.CommandCensor
 com/chimp/window/WindowManager.java
  com.chimp.window.WindowManager
  com.chimp.window.WindowManager$1
@@ -59,7 +43,11 @@ com/chimp/ApplicationMain.java
  com.chimp.ApplicationMain
 com/chimp/services/ApplicationService.java
  com.chimp.services.ApplicationService
-com/chimp/services/CommandSet.java
- com.chimp.services.CommandSet
-com/chimp/commands/CommandPurge.java
- com.chimp.commands.CommandPurge
+com/chimp/services/Logger.java
+ com.chimp.services.Logger
+com/chimp/services/AutoModerator.java
+ com.chimp.services.AutoModerator
+com/chimp/window/WindowMain.java
+ com.chimp.window.WindowMain
+com/chimp/moderation/BadUser.java
+ com.chimp.moderation.BadUser

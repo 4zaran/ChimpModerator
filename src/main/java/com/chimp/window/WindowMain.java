@@ -9,13 +9,13 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class WindowMain extends JFrame {
-    public JLabel guildText;
-    public JLabel channelText;
-    public JButton sendButton;
-    public JTextField messageTextField;
-    public JComboBox<String> guildsBox;
-    public JComboBox<String> textChannelsBox;
-    public HashMap<String, JTextPane> logPanes;
+    private JLabel guildText;
+    private JLabel channelText;
+    private JButton sendButton;
+    private JTextField messageTextField;
+    private JComboBox<String> guildsBox;
+    private JComboBox<String> textChannelsBox;
+    private HashMap<String, JTextPane> logPanes;
     private Style style;
     private JScrollPane logScrollPane;
 
@@ -44,39 +44,38 @@ public class WindowMain extends JFrame {
         logTextArea.setMargin(new Insets(5, 5, 5, 5));
         return logTextArea;
     }
-
     private void createUIElements() {
         GridBagConstraints layoutConstraints = new GridBagConstraints();
         Insets insets = new Insets(5, 5, 5, 5);
 
-        guildText = new JLabel();
-        guildText.setText("Server:");
-        addObjects(guildText, layoutConstraints, GridBagConstraints.HORIZONTAL,
+        setGuildText(new JLabel());
+        getGuildText().setText("Server:");
+        addObjects(getGuildText(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 0, 0, 1,
                 0, 0, insets);
 
-        guildsBox = new JComboBox<>();
-        guildsBox.addItem("Console");
-        guildsBox.setEnabled(false);
-        addObjects(guildsBox, layoutConstraints, GridBagConstraints.HORIZONTAL,
+        setGuildsBox(new JComboBox<>());
+        getGuildsBox().addItem("Console");
+        getGuildsBox().setEnabled(false);
+        addObjects(getGuildsBox(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 1, 0, 1,
                 1, 0, insets);
 
-        channelText = new JLabel();
-        channelText.setText("Text channel:");
-        addObjects(channelText, layoutConstraints, GridBagConstraints.HORIZONTAL,
+        setChannelText(new JLabel());
+        getChannelText().setText("Text channel:");
+        addObjects(getChannelText(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 2, 0, 1,
                 0, 0, insets);
 
-        textChannelsBox = new JComboBox<>();
-        textChannelsBox.setEnabled(false);
-        addObjects(textChannelsBox, layoutConstraints, GridBagConstraints.HORIZONTAL,
+        setTextChannelsBox(new JComboBox<>());
+        getTextChannelsBox().setEnabled(false);
+        addObjects(getTextChannelsBox(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 3, 0, 1,
                 1, 0, insets);
 
-        logPanes = new HashMap<>();
-        logPanes.put("console", createLogTextArea());
-        this.logScrollPane = new JScrollPane((logPanes.get("console")),
+        setLogPanes(new HashMap<>());
+        getLogPanes().put("console", createLogTextArea());
+        this.logScrollPane = new JScrollPane((getLogPanes().get("console")),
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         insets = new Insets(5, 5, 0, 5);
@@ -85,20 +84,19 @@ public class WindowMain extends JFrame {
                 0, 1, insets);
 
         insets = new Insets(5, 5, 5, 5);
-        messageTextField = new JTextField();
-        messageTextField.setEnabled(false);
-        messageTextField.setText("Connecting. Please wait...");
-        addObjects(messageTextField, layoutConstraints, GridBagConstraints.HORIZONTAL,
+        setMessageTextField(new JTextField());
+        getMessageTextField().setEnabled(false);
+        getMessageTextField().setText("Connecting. Please wait...");
+        addObjects(getMessageTextField(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 0, 2, 3,
                 1, 0.0, insets);
 
-        sendButton = new JButton("Send");
-        sendButton.setEnabled(false);
-        addObjects(sendButton, layoutConstraints, GridBagConstraints.NONE,
+        setSendButton(new JButton("Send"));
+        getSendButton().setEnabled(false);
+        addObjects(getSendButton(), layoutConstraints, GridBagConstraints.NONE,
                 3, 2, 1,
                 1, 0.0, insets);
     }
-
     private void addObjects(Component component,
                             GridBagConstraints layoutConstraints,
                             int fill,
@@ -117,6 +115,26 @@ public class WindowMain extends JFrame {
         layoutConstraints.insets = insets;
         add(component, layoutConstraints);
     }
+
+    public String getMessageText(){
+        String messageToSend = getMessageTextField().getText();
+        getMessageTextField().setText("");
+        return messageToSend;
+    }
+    public void addLogArea(String areaName){
+        getLogPanes().put(areaName, createLogTextArea());
+    }
+    public void switchLogArea(String areaName){
+        JTextPane area = getLogPanes().get(areaName);
+        //TODO change name to channelID@guildID
+        if(area == null){
+            addLogArea(areaName);
+            switchLogArea(areaName);
+        }
+        else{
+            logScrollPane.setViewportView(area);
+        }
+    }
     public void printText(String[] textFragment, Color[] colors, String channel){
         if(textFragment.length == colors.length){
             for (int i = 0; i < textFragment.length; i++) {
@@ -128,11 +146,9 @@ public class WindowMain extends JFrame {
             printText("Printing error...", Color.RED, channel);
         }
     }
-
     public void printText(String text, Color c, String channel) {
         printText(text, c, true, channel);
     }
-
     public void printText(String text, String channel) {
         printText(text, Color.BLACK, true, channel);
     }
@@ -148,33 +164,67 @@ public class WindowMain extends JFrame {
         }
         catch (BadLocationException ignored){}
     }
-
-    public String getMessageText(){
-        String messageToSend = messageTextField.getText();
-        messageTextField.setText("");
-        return messageToSend;
-    }
-
-    public void addLogArea(String areaName){
-        logPanes.put(areaName, createLogTextArea());
-    }
-
-    public void switchLogArea(String areaName){
-        JTextPane area = logPanes.get(areaName);
-        //TODO change name to channelID@guildID
-        if(area == null){
-            addLogArea(areaName);
-            switchLogArea(areaName);
-        }
-        else{
-            logScrollPane.setViewportView(area);
-        }
-    }
-
     private StyledDocument getDocByName(String name){
-        JTextPane area = logPanes.get(name);
+        JTextPane area = getLogPanes().get(name);
         if(area != null)
             return area.getStyledDocument();
         else return null;
+    }
+
+
+    public JLabel getGuildText() {
+        return guildText;
+    }
+
+    public void setGuildText(JLabel guildText) {
+        this.guildText = guildText;
+    }
+
+    public JLabel getChannelText() {
+        return channelText;
+    }
+
+    public void setChannelText(JLabel channelText) {
+        this.channelText = channelText;
+    }
+
+    public JButton getSendButton() {
+        return sendButton;
+    }
+
+    public void setSendButton(JButton sendButton) {
+        this.sendButton = sendButton;
+    }
+
+    public JTextField getMessageTextField() {
+        return messageTextField;
+    }
+
+    public void setMessageTextField(JTextField messageTextField) {
+        this.messageTextField = messageTextField;
+    }
+
+    public JComboBox<String> getGuildsBox() {
+        return guildsBox;
+    }
+
+    public void setGuildsBox(JComboBox<String> guildsBox) {
+        this.guildsBox = guildsBox;
+    }
+
+    public JComboBox<String> getTextChannelsBox() {
+        return textChannelsBox;
+    }
+
+    public void setTextChannelsBox(JComboBox<String> textChannelsBox) {
+        this.textChannelsBox = textChannelsBox;
+    }
+
+    public HashMap<String, JTextPane> getLogPanes() {
+        return logPanes;
+    }
+
+    public void setLogPanes(HashMap<String, JTextPane> logPanes) {
+        this.logPanes = logPanes;
     }
 }

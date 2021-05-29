@@ -25,10 +25,12 @@ public class MessageInterpreter {
         // Ignore blank messages (for example embeds)
         if (event.getMessage().getContentRaw().equals("")) return;
 
+        // Search for command and execute it
         if (commands.containsKey(messageParameters.get(0).toLowerCase())){
             Command c = commands.get(messageParameters.get(0).toLowerCase());
             c.execute(event, messageParameters);
 
+            // Purge deletes message containing command by itself
             if (!messageParameters.get(0).equalsIgnoreCase("/purge")) {
                 event.getMessage().delete().queue();
             }

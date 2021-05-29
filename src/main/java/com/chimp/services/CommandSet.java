@@ -21,7 +21,6 @@ public abstract class CommandSet {
         commands.put("/config", new CommandConfig());
         commands.put("/role", new CommandRole());
         commands.put("/roles", new CommandRoles());
-        // commands.put("/mute", new CommandMute());
 
         return commands;
     }

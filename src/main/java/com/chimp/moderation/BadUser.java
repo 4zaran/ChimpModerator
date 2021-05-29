@@ -7,8 +7,9 @@ import net.dv8tion.jda.api.entities.User;
 public class BadUser {
     private BehaviourState state;
     private int violationAmount;
-    private int warnAmount, kickAmount;
-    private User user;
+    private final int warnAmount;
+    private final int kickAmount;
+    private final User user;
 
     public BadUser(User user, int warnAmount, int kickAmount){
         this.user = user;
@@ -36,14 +37,18 @@ public class BadUser {
         violationAmount++;
         if(state == BehaviourState.WARNED){
             textChannel.sendMessage(
-                    String.format("**Warning** <@!%s>! You have violated the rules!\nWarnings issued: %d\nGetting more than %d warnings will cause a kick or ban from the server!",
+                    String.format("**Warning** <@!%s>! You have violated the rules!\n" +
+                                    "Warnings issued: %d\n" +
+                                    "Getting more than %d warnings will cause a kick or ban from the server!",
                             user.getId(),
                             violationAmount,
                             AutoModerator.getWarnAmount())).queue();
         }
         if(state == BehaviourState.KICKED){
             textChannel.sendMessage(
-                    String.format("**Kicking** <@!%s> for violating the rules. \nKicks issued: %d\nGetting more than %d kicks will cause ban from the server!",
+                    String.format("**Kicking** <@!%s> for violating the rules.\n" +
+                                    "Kicks issued: %d\n" +
+                                    "Getting more than %d kicks will cause ban from the server!",
                             user.getId(),
                             violationAmount,
                             AutoModerator.getKickAmount())).queue();
@@ -51,7 +56,8 @@ public class BadUser {
         }
         if(state == BehaviourState.BANNED){
             textChannel.sendMessage(
-                    String.format("**Banning** <@!%s> for violating the rules. \nBans issued: %d",
+                    String.format("**Banning** <@!%s> for violating the rules. \n" +
+                                    "Bans issued: %d",
                             user.getId(),
                             violationAmount)).queue();
             textChannel.sendMessage(String.format("/ban <@!%s> \"Violation of the rules\"", user.getId())).queue();
