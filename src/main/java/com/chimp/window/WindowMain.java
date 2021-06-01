@@ -1,6 +1,7 @@
 package com.chimp.window;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -13,8 +14,8 @@ public class WindowMain extends JFrame {
     private JLabel channelText;
     private JButton sendButton;
     private JTextField messageTextField;
-    private JComboBox<String> guildsBox;
-    private JComboBox<String> textChannelsBox;
+    private JComboBox<ComboItem> guildsBox;
+    private JComboBox<ComboItem> textChannelsBox;
     private HashMap<String, JTextPane> logPanes;
     private Style style;
     private JScrollPane logScrollPane;
@@ -48,34 +49,35 @@ public class WindowMain extends JFrame {
         GridBagConstraints layoutConstraints = new GridBagConstraints();
         Insets insets = new Insets(5, 5, 5, 5);
 
-        setGuildText(new JLabel());
+        guildText = new JLabel();
         getGuildText().setText("Server:");
         addObjects(getGuildText(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 0, 0, 1,
                 0, 0, insets);
 
-        setGuildsBox(new JComboBox<>());
-        getGuildsBox().addItem("Console");
+        guildsBox = new JComboBox<>();
+        getGuildsBox().addItem(new ComboItem("console", "0"));
         getGuildsBox().setEnabled(false);
         addObjects(getGuildsBox(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 1, 0, 1,
                 1, 0, insets);
 
-        setChannelText(new JLabel());
+        channelText = new JLabel();
         getChannelText().setText("Text channel:");
         addObjects(getChannelText(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 2, 0, 1,
                 0, 0, insets);
 
-        setTextChannelsBox(new JComboBox<>());
+        textChannelsBox = new JComboBox<>();
         getTextChannelsBox().setEnabled(false);
         addObjects(getTextChannelsBox(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 3, 0, 1,
                 1, 0, insets);
 
-        setLogPanes(new HashMap<>());
-        getLogPanes().put("console", createLogTextArea());
-        this.logScrollPane = new JScrollPane((getLogPanes().get("console")),
+        logPanes = new HashMap<>();
+        // Console has the id of "0"
+        getLogPanes().put("0", createLogTextArea());
+        this.logScrollPane = new JScrollPane((getLogPanes().get("0")),
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         insets = new Insets(5, 5, 0, 5);
@@ -84,14 +86,14 @@ public class WindowMain extends JFrame {
                 0, 1, insets);
 
         insets = new Insets(5, 5, 5, 5);
-        setMessageTextField(new JTextField());
+        messageTextField = new JTextField();
         getMessageTextField().setEnabled(false);
         getMessageTextField().setText("Connecting. Please wait...");
         addObjects(getMessageTextField(), layoutConstraints, GridBagConstraints.HORIZONTAL,
                 0, 2, 3,
                 1, 0.0, insets);
 
-        setSendButton(new JButton("Send"));
+        sendButton = new JButton("Send");
         getSendButton().setEnabled(false);
         addObjects(getSendButton(), layoutConstraints, GridBagConstraints.NONE,
                 3, 2, 1,
@@ -135,37 +137,38 @@ public class WindowMain extends JFrame {
             logScrollPane.setViewportView(area);
         }
     }
-    public void printText(String[] textFragment, Color[] colors, String channel){
+    public void printText(String[] textFragment, Color[] colors, String channelId){
         if(textFragment.length == colors.length){
             for (int i = 0; i < textFragment.length; i++) {
-                printText(textFragment[i], colors[i], false, channel);
+                printText(textFragment[i], colors[i], false, channelId);
             }
-            printText("", channel);
+            printText("", channelId);
         }
         else{
-            printText("Printing error...", Color.RED, channel);
+            printText("Printing error...", Color.RED, channelId);
         }
     }
-    public void printText(String text, Color c, String channel) {
-        printText(text, c, true, channel);
+    public void printText(String text, Color c, String channelId) {
+        printText(text, c, true, channelId);
     }
-    public void printText(String text, String channel) {
-        printText(text, Color.BLACK, true, channel);
+    public void printText(String text, String channelId) {
+        printText(text, Color.BLACK, true, channelId);
     }
 
-    private void printText(String text, Color c, Boolean newLine, String channel){
+    private void printText(String text, Color c, Boolean newLine, String channelId){
         StyleConstants.setForeground(style, c);
         if(newLine)
             text += '\n';
         try {
-            StyledDocument styledDocument = getDocByName(channel);
+            StyledDocument styledDocument = getDocById(channelId);
             if(styledDocument != null)
                 styledDocument.insertString(styledDocument.getLength(), text, style);
         }
         catch (BadLocationException ignored){}
     }
-    private StyledDocument getDocByName(String name){
-        JTextPane area = getLogPanes().get(name);
+
+    private StyledDocument getDocById(String id){
+        JTextPane area = getLogPanes().get(id);
         if(area != null)
             return area.getStyledDocument();
         else return null;
@@ -176,55 +179,27 @@ public class WindowMain extends JFrame {
         return guildText;
     }
 
-    public void setGuildText(JLabel guildText) {
-        this.guildText = guildText;
-    }
-
     public JLabel getChannelText() {
         return channelText;
-    }
-
-    public void setChannelText(JLabel channelText) {
-        this.channelText = channelText;
     }
 
     public JButton getSendButton() {
         return sendButton;
     }
 
-    public void setSendButton(JButton sendButton) {
-        this.sendButton = sendButton;
-    }
-
     public JTextField getMessageTextField() {
         return messageTextField;
     }
 
-    public void setMessageTextField(JTextField messageTextField) {
-        this.messageTextField = messageTextField;
-    }
-
-    public JComboBox<String> getGuildsBox() {
+    public JComboBox<ComboItem> getGuildsBox() {
         return guildsBox;
     }
 
-    public void setGuildsBox(JComboBox<String> guildsBox) {
-        this.guildsBox = guildsBox;
-    }
-
-    public JComboBox<String> getTextChannelsBox() {
+    public JComboBox<ComboItem> getTextChannelsBox() {
         return textChannelsBox;
-    }
-
-    public void setTextChannelsBox(JComboBox<String> textChannelsBox) {
-        this.textChannelsBox = textChannelsBox;
     }
 
     public HashMap<String, JTextPane> getLogPanes() {
         return logPanes;
-    }
-
-    public void setLogPanes(HashMap<String, JTextPane> logPanes) {
-        this.logPanes = logPanes;
     }
 }

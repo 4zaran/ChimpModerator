@@ -10,8 +10,8 @@ com/chimp/commands/CommandRole.java
  com.chimp.commands.CommandRole
 com/chimp/moderation/BehaviourState.java
  com.chimp.moderation.BehaviourState
-com/chimp/window/ComboItem.java
- com.chimp.window.ComboItem
+com/chimp/services/AutoModerator.java
+ com.chimp.services.AutoModerator
 com/chimp/commands/Command.java
  com.chimp.commands.Command
 com/chimp/commands/CommandCensor.java
@@ -24,18 +24,22 @@ com/chimp/commands/CommandKick.java
  com.chimp.commands.CommandKick
 com/chimp/commands/CommandRoles.java
  com.chimp.commands.CommandRoles
-com/chimp/commands/CommandUncensor.java
- com.chimp.commands.CommandUncensor
+com/chimp/moderation/BadUser.java
+ com.chimp.moderation.BadUser
 com/chimp/services/Test.java
  com.chimp.services.Test
  com.chimp.services.Test$1
  com.chimp.services.Test$2
  com.chimp.services.Test$3
  com.chimp.services.Test$4
-com/chimp/commands/CommandConfig.java
- com.chimp.commands.CommandConfig
 com/chimp/services/MessageInterpreter.java
  com.chimp.services.MessageInterpreter
+com/chimp/commands/CommandConfig.java
+ com.chimp.commands.CommandConfig
+com/chimp/window/ComboItem.java
+ com.chimp.window.ComboItem
+com/chimp/commands/CommandUncensor.java
+ com.chimp.commands.CommandUncensor
 com/chimp/window/WindowManager.java
  com.chimp.window.WindowManager
  com.chimp.window.WindowManager$1
@@ -45,9 +49,5 @@ com/chimp/services/ApplicationService.java
  com.chimp.services.ApplicationService
 com/chimp/services/Logger.java
  com.chimp.services.Logger
-com/chimp/services/AutoModerator.java
- com.chimp.services.AutoModerator
 com/chimp/window/WindowMain.java
  com.chimp.window.WindowMain
-com/chimp/moderation/BadUser.java
- com.chimp.moderation.BadUser

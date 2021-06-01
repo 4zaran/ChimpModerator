@@ -36,6 +36,7 @@ public class WindowManager extends WindowAdapter {
             }
         });
 
+        // TODO DEBUG
         window.getGuildsBox().addActionListener(e -> {
             if(window.getGuildsBox().getSelectedIndex() != 0)
                 switchToServer();
@@ -45,7 +46,11 @@ public class WindowManager extends WindowAdapter {
 
         window.getTextChannelsBox().addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                String channelName = Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem()) + "@" + Objects.requireNonNull(window.getGuildsBox().getSelectedItem());
+                ComboItem channel = (ComboItem) window.getTextChannelsBox().getSelectedItem();
+                ComboItem guild = (ComboItem) window.getGuildsBox().getSelectedItem();
+                assert channel != null;
+                assert guild != null;
+                String channelName = channel.getId() + "@" + guild.getId();
                 window.switchLogArea(channelName);
             }
         });
@@ -62,10 +67,10 @@ public class WindowManager extends WindowAdapter {
     public void setupWindow(){
         List<Guild> guilds = jda.getJda().getGuilds();
         for (Guild guild: guilds) {
-            window.getGuildsBox().addItem(guild.getName());
+            window.getGuildsBox().addItem(new ComboItem(guild.getName(), guild.getId()));
             List<TextChannel> textChannels = guild.getTextChannels();
             for(TextChannel textChannel: textChannels){
-                String channelName = textChannel.getName() + "@" + guild.getName();
+                String channelName = textChannel.getId() + "@" + guild.getId();
                 window.addLogArea(channelName);
             }
         }
@@ -74,12 +79,16 @@ public class WindowManager extends WindowAdapter {
 
     private void sendMessage() {
         String messageToSend = window.getMessageText();
-        TextChannel textChannel = jda.getTextChannel(Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem()).toString());
-        if (!Objects.equals(messageToSend, ""))
+        ComboItem channel = (ComboItem) window.getTextChannelsBox().getSelectedItem();
+        assert channel != null;
+        TextChannel textChannel = jda.getJda().getTextChannelById(channel.getId());
+        if (!Objects.equals(messageToSend, "")) {
+            assert textChannel != null;
             textChannel.sendMessage(messageToSend).queue();
+        }
     }
     private void switchToConsole(){
-        window.switchLogArea("console");
+        window.switchLogArea("0");
         window.getSendButton().setEnabled(false);
         if(window.getTextChannelsBox().getItemCount() > 0)
             window.getTextChannelsBox().removeAllItems();
@@ -94,14 +103,16 @@ public class WindowManager extends WindowAdapter {
         window.getTextChannelsBox().setEnabled(true);
         window.getMessageTextField().setEnabled(true);
 
-        List<Guild> guilds = jda.getJda().getGuildsByName(Objects.requireNonNull(window.getGuildsBox().getSelectedItem()).toString(), false);
-        if(guilds.size() > 0) {
-            for (TextChannel channel : guilds.get(0).getTextChannels()) {
-                window.getTextChannelsBox().addItem(channel.getName());
+        String guildId = ((ComboItem) Objects.requireNonNull(window.getGuildsBox().getSelectedItem())).getId();
+        Guild guild = jda.getJda().getGuildById(guildId);
+        if(guild != null) {
+            for (TextChannel channel : guild.getTextChannels()) {
+                window.getTextChannelsBox().addItem(new ComboItem(channel.getName(), channel.getId()));
             }
         }
-        String channelName = Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem()) + "@" + window.getGuildsBox().getSelectedItem().toString();
-        window.switchLogArea(channelName);
+        guildId = ((ComboItem) window.getGuildsBox().getSelectedItem()).getId();
+        String textChannelId = ((ComboItem) Objects.requireNonNull(window.getTextChannelsBox().getSelectedItem())).getId();
+        String channelId = textChannelId + "@" + guildId;
+        window.switchLogArea(channelId);
     }
 }
-// TODO wchłonięcie funkcji
