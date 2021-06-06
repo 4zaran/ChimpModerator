@@ -5,6 +5,7 @@ import com.chimp.services.Logger;
 import com.chimp.services.MessageInterpreter;
 import com.chimp.window.WindowMain;
 import com.chimp.window.WindowManager;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -39,7 +40,9 @@ public class ApplicationMain extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
-        interpreter.handleMessage(event);
-        logger.logMessage(event);
+        if(!event.isFromType(ChannelType.PRIVATE)){
+            interpreter.handleMessage(event);
+            logger.logMessage(event);
+        }
     }
 }

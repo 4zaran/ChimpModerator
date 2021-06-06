@@ -17,7 +17,6 @@ public class CommandCensor implements Command{
             StringBuilder exp = new StringBuilder();
             StringBuilder ext = new StringBuilder();
             while (i < parameters.size()) {
-                //TODO error on already censored
                 if (AutoModerator.censor(parameters.get(i))){
                     if(!exp.toString().isEmpty())
                         exp.append(", ").append(parameters.get(i));
