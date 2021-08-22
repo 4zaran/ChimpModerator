@@ -1,14 +1,16 @@
 package com.chimp.commands;
 
+import com.chimp.commands.syntax.Command;
+import com.chimp.commands.syntax.CommandWrapper;
+import com.chimp.commands.syntax.ParameterType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
 
 
 /**
@@ -17,121 +19,87 @@ import java.util.TreeMap;
  * <p>
  * The command is using filters to be more useful.
  */
-public class CommandPurge implements Command {
-    private static boolean isNumeric(String s) {
-        if (s == null) {
-            return false;
-        }
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
+public class CommandPurge extends Command {
+    private List<Message> messages;
+    CommandWrapper wrapper;
 
-    @Override
-    public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        TextChannel channel = event.getTextChannel();
-        Message commandMessage = event.getMessage();
+    public CommandPurge(){
+        addOption("silent",
+                ParameterType.KEYWORD,
+                false,
+                "With this keyword, there will be no confirmation after successful operation");
+        addOption("amount",
+                ParameterType.KEYWORD,
+                false,
+                "Defines the amount of messages to check.")
+                .addValue("amount_value",
+                        ParameterType.INTEGER,
+                        true,
+                        "Takes the integer value");
 
-        int amount;
-        if (parameters.size() > 1 && isNumeric(parameters.get(1))) {
-            // Get number from command parameters
-            amount = Integer.parseInt(parameters.get(1));
-            // Do not count the command message
-            amount++;
-            //TODO może ostrzeżenie, że nie można tak dużo?
-            if (amount > 100)
-                amount = 100;
-        } else {
-            // Delete 10 last messages (+ message containing command to do so)
-            amount = 11;
-        }
-        // Get messages
-        List<Message> messages = channel.getHistory().retrievePast(amount).complete();
+        addOption("contains",
+                ParameterType.KEYWORD,
+                false,
+                "Defines the messages containing text specified in option")
+                .addValue("value",
+                        ParameterType.ANY,
+                        true,
+                        "Takes any text.");
 
-        // Filter them if arguments are provided
-        if (parameters.size() > 1) {
-            boolean mentionHandled = false;
-            for (int i = 0; i < parameters.size(); i++) {
-                if (!mentionHandled && event.getMessage().getMentionedUsers().size() > 0) {
-                    mentionHandled = true;
-                    List<User> MentionedUsers = event.getMessage().getMentionedUsers();
-                    messages.removeIf(curr -> !MentionedUsers.get(0).equals(curr.getAuthor()));
-                }
+        addOption("equals",
+                ParameterType.KEYWORD,
+                false,
+                "Checks if content of messages is equal to the text specified. " +
+                        "Note that this is the only option in purge command that is case sensitive.")
+                .addValue("value",
+                        ParameterType.ANY,
+                        true,
+                        "Takes any text.");
 
-                // If option for current parameter keyword exists...
-                if(parameters.size() != i + 1) {
-                    int finalI = i; // Save current index
-                    String parameterKeyWord = parameters.get(i).toLowerCase();
-                    String parameterOption = parameters.get(finalI + 1);
-                    Boolean parametersValid = removeMessagesIf(messages,
-                            parameterOption,
-                            parameterKeyWord);
+        addOption("startswith",
+                ParameterType.KEYWORD,
+                false,
+                "Checks if content of messages starts with text provided.")
+                .addValue("value",
+                        ParameterType.ANY,
+                        true,
+                        "Takes any text.");
 
-                    if(parametersValid)
-                        i++;    // Skip parameter option in next loop and get a keyword
-                }
-            }
-        }
+        addOption("endswith",
+                ParameterType.KEYWORD,
+                false,
+                "Checks if content of messages ends with text provided.")
+                .addValue("value",
+                        ParameterType.ANY,
+                        true,
+                        "Takes any text");
 
-        // Delete message with command even when it's not matching applied filters
-        if (!messages.contains(commandMessage))
-            messages.add(commandMessage);
+        addOption("from",
+                ParameterType.KEYWORD,
+                false,
+                "Checks if message was sent by specified user.")
+                .addValue("value",
+                        ParameterType.USER,
+                        true,
+                        "Takes an user. " +
+                                "The format of the accepted input: \n" +
+                                " - normal mentions\n" +
+                                " - <@USERID> or <@!USERID>\n" +
+                                " - @USERNAME#1234 (NOTE: This method will return user only when it's already in cache)");
 
-        // You can't use purgeMessages() method on 1 message
-        if (messages.size() == 1) {
-            messages.get(0).delete().queue();
-        } else channel.purgeMessages(messages);
-    }
-
-    private Boolean removeMessagesIf(List<Message> messages, String parameterOption, String condition) {
-        Iterator<Message> messageIterator = messages.iterator();
-        String messageContent = messageIterator.next().getContentRaw().toLowerCase();
-
-        // Only equals pays attention to case size
-        if(!condition.equals("equals"))
-            parameterOption = parameterOption.toLowerCase();
-
-        switch (condition){
-            case "contains":
-                while(messageIterator.hasNext()){
-                    if(!messageContent.contains(parameterOption))
-                        messageIterator.remove();
-                }
-                return true;
-            case "equals":
-                messageContent = messageIterator.next().getContentRaw();
-                while(messageIterator.hasNext()){
-                    if(!messageContent.equals(parameterOption))
-                        messageIterator.remove();
-                }
-                return true;
-            case "startswith":
-                while(messageIterator.hasNext()){
-                    if(!messageContent.startsWith(parameterOption))
-                        messageIterator.remove();
-                }
-                return true;
-            case "endswith":
-                while(messageIterator.hasNext()){
-                    if(!messageContent.endsWith(parameterOption))
-                        messageIterator.remove();
-                }
-                return true;
-            case "has":
-                if (parameterOption.equals("embed")) {
-                    messages.removeIf(
-                            message -> message.getEmbeds().size() == 0);
-                } else if (parameterOption.equals("file")) {
-                    messages.removeIf(
-                            message -> message.getAttachments().size() == 0);
-                }
-                return true;
-            default:
-                return false;
-        }
+        addOption("has",
+                ParameterType.KEYWORD,
+                false,
+                "Checks if message has something besides normal text")
+                .addValue("value",
+                        ParameterType.STRING,
+                        true,
+                        "Currently accepted values:\n" +
+                                " - file\n" +
+                                " - embed\n" +
+                                " - mentions\n" +
+                                " - invites\n" +
+                                " - reactions\n");
     }
 
     @Override
@@ -140,15 +108,106 @@ public class CommandPurge implements Command {
     }
 
     @Override
-    public TreeMap<String, String> getSyntax() {
-        TreeMap<String, String> commandsWithDescriptions = new TreeMap<>();
-        commandsWithDescriptions.put("/purge", "Deletes 10 messages");
-        commandsWithDescriptions.put("/purge [amount]", "Deletes specified amount of messages (max 100)");
-        commandsWithDescriptions.put("/purge @user", "Deletes specified amount of messages (max 100)");
-        commandsWithDescriptions.put("/purge contains (text)", "Deletes messages containing phrase");
-        commandsWithDescriptions.put("/purge has (file/embed)", "Deletes messages containing file or embed");
-        commandsWithDescriptions.put("/purge equals (text)", "Deletes messages containing exact text provided");
-        commandsWithDescriptions.put("/purge [amount] (other filters)", "Full command syntax. Note that you can use multiple filters in one comamnd but the `amount` field must be the first argument");
-        return commandsWithDescriptions;
+    public void execute(CommandWrapper wrapper) throws Exception {
+        this.wrapper = wrapper;
+        wrapper.assignOptions();
+
+        if(wrapper.hasUnusedValues())
+            reportError("Too many parameters!", wrapper);
+        if(wrapper.hasNoOptions())
+            reportError("No options provided! Use help to see available options.", wrapper);
+
+        boolean silent = wrapper.getOption("silent").asBoolFromKeyword();
+        TextChannel channel = wrapper.getTextChannel();
+
+        int amount = getAmount(wrapper);
+        messages = channel.getHistory().retrievePast(amount).complete();
+
+        Iterator<Map.Entry<String, String>> it = wrapper.getOptions().entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String, String> pair = it.next();
+            removeMessagesIf( pair.getKey(), pair.getValue());
+            it.remove();
+        }
+
+        // Don't delete message with command
+        if(wrapper.isMessage())
+            messages.remove(wrapper.getEvent().getMessage());
+
+        if (messages.size() == 1) {
+            // You can't use purgeMessages() method on 1 message
+            if(!silent) reportInfo("Deleting 1 message...", wrapper);
+            messages.get(0).delete().queue();
+        }
+        else if (!silent) reportInfo(String.format("Deleting %d messages...", messages.size()), wrapper);
+    }
+
+    @NotNull
+    private Integer getAmount(CommandWrapper wrapper) throws Exception {
+        Integer amount = wrapper.getOption("amount").asInteger();
+
+        if(amount == null) amount = 10;
+        else if (amount < 1) reportError("Amount can't be less than 1", wrapper);
+        else if (amount > 100) reportError("Amount is limited to 100!", wrapper);
+
+        if(wrapper.isMessage() && amount < 100)
+            amount += 1; // Message containing command
+
+        return amount;
+    }
+
+    private void removeMessagesIf(String keyword, String value) throws Exception {
+        // Only equals pays attention to case size
+        if(!keyword.equals("equals"))
+            value = value.toLowerCase();
+
+        String finalValue = value;
+
+        switch (keyword){
+            case "contains":
+                messages.removeIf(message -> !message.getContentRaw().toLowerCase().contains(finalValue));
+                break;
+            case "equals":
+                messages.removeIf(message -> !message.getContentRaw().equals(finalValue));
+                break;
+            case "startswith":
+                messages.removeIf(message -> !message.getContentRaw().toLowerCase().startsWith(finalValue));
+                break;
+            case "endswith":
+                messages.removeIf(message -> !message.getContentRaw().toLowerCase().endsWith(finalValue));
+                break;
+            case "from":
+                User user = wrapper.getOption("from").asUser();
+                messages.removeIf(message -> !message.getAuthor().equals(user));
+                break;
+            case "has":
+                switch (value) {
+                    case "embed":
+                        messages.removeIf(message -> message.getEmbeds().size() == 0);
+                        break;
+                    case "file":
+                        messages.removeIf(message -> message.getAttachments().size() == 0);
+                        break;
+                    case "mentions":
+                        messages.removeIf(message -> message.getMentions().size() == 0);
+                        break;
+                    case "invites":
+                        messages.removeIf(message -> message.getInvites().size() == 0);
+                        break;
+                    case "reactions":
+                        messages.removeIf(message -> message.getReactions().size() == 0);
+                        break;
+                    default:
+                        reportError("Unkown option \"" + value + "\"", wrapper);
+                        break;
+                }
+                break;
+            case "amount":  // fall through
+            case "silent":
+                break;
+            default:
+                reportError("Unkown keyword \"" + value + "\"", wrapper);
+                break;
+        }
     }
 }

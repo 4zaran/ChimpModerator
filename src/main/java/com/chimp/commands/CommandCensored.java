@@ -1,41 +1,121 @@
 package com.chimp.commands;
 
+import com.chimp.commands.syntax.Command;
+import com.chimp.commands.syntax.CommandWrapper;
+import com.chimp.commands.syntax.OptionConverter;
+import com.chimp.commands.syntax.ParameterType;
 import com.chimp.services.AutoModerator;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
-public class CommandCensored implements Command{
-    @Override
-    public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        TextChannel textChannel = event.getTextChannel();
-        String expressions = AutoModerator.censored();
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setColor(new Color(4, 133, 241));
-        eb.setTitle("Censored expressions");
-        if(!expressions.isEmpty()) {
-            eb.setDescription(expressions);
-        }
-        else{
-            eb.setDescription("No censored expressions found.");
-        }
-        textChannel.sendMessage(eb.build()).queue();
+public class CommandCensored extends Command {
+
+    public CommandCensored(){
+        // TODO MAYBE ADD SOMETHING TO TELL IF ALL PARAMETERS MUST BE USED
+        addOption("add", ParameterType.KEYWORD, false, "Used to add new censored expressions.")
+                .addValue("expression", ParameterType.ANY, true, "Expression to add");
+        addOption("remove", ParameterType.KEYWORD, false, "Used to remove expression from censored ones.")
+                .addValue("expression", ParameterType.ANY, true, "Expression to remove");
     }
 
     @Override
     public String getDescription() {
-        return "Displays current censored expressions";
+        return "Displays a list o all censored expressions.";
     }
 
     @Override
-    public TreeMap<String, String> getSyntax() {
-        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
-        commandsWithDescriptions.put("/censored", "Sends list of censored expressions");
-        return commandsWithDescriptions;
+    public void execute(CommandWrapper wrapper) throws Exception {
+        wrapper.assignOptions();
+
+        // No options/keywords - Display simple list of censored expressions.
+        if(wrapper.hasNoOptions()){
+            String censored = AutoModerator.censored();
+            if(censored.length() > 0)
+                reportInfo("Censored expressions: " + censored, wrapper);
+            else reportInfo("No censored expressions found.", wrapper);
+        }
+        else{
+            executeAddOption(wrapper);
+            executeRemoveOption(wrapper);
+        }
+    }
+
+    private void executeAddOption(CommandWrapper wrapper){
+        if(wrapper.isOptionPresent("add")){
+            String expression;
+            List<String> error = new ArrayList<>();
+            List<String> success = new ArrayList<>();
+
+            OptionConverter getOption = wrapper.getOption("add");
+
+            while (getOption != null) {
+                expression = getOption.asString();
+
+                if (AutoModerator.censor(expression)) {
+                    if (!success.contains(expression))
+                        success.add(expression);
+                } else if (!error.contains(expression))
+                    error.add(expression);
+
+                getOption = wrapper.fetchNextValue("add");
+            }
+
+            StringBuilder sb = new StringBuilder();
+            if (success.size() > 0) {
+                sb.append("Successfully censored those expressions: \n");
+                appendList(sb, success);
+            }
+            if(error.size() > 0){
+                sb.append("Those expressions were already censored: \n");
+                appendList(sb, error);
+            }
+            reportInfo(sb.toString(), wrapper);
+            // String s = wrapper.getOption("add").asString();
+        }
+    }
+
+    private void executeRemoveOption(CommandWrapper wrapper){
+        if(wrapper.isOptionPresent("remove")){String expression;
+            List<String> success = new ArrayList<>();
+            List<String> error = new ArrayList<>();
+
+            OptionConverter getOption = wrapper.getOption("remove");
+
+            while(getOption != null){
+                expression = getOption.asString();
+
+                if (AutoModerator.removeCensored(expression)){
+                    if(!success.contains(expression))
+                        success.add(expression);
+                }
+                else if(!error.contains(expression))
+                    error.add(expression);
+
+                getOption = wrapper.fetchNextValue("remove");
+            }
+
+            StringBuilder sb = new StringBuilder();
+            if(success.size() > 0) {
+                sb.append("Successfully removed those expressions: \n");
+                appendList(sb, success);
+            }
+            if(error.size() > 0) {
+                sb.append("Those expressions are not censored: \n");
+                appendList(sb, error);
+            }
+            reportInfo(sb.toString(), wrapper);
+        }
+    }
+
+    private void appendList(StringBuilder sb, List<String> list) {
+        if (list.size() > 0) {
+            for (String s : list) {
+                sb.append(s).append(", ");
+            }
+            int i = sb.lastIndexOf(",");
+            sb.deleteCharAt(i).deleteCharAt(i);
+            sb.append("\n");
+        }
     }
 }

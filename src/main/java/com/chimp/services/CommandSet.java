@@ -1,26 +1,30 @@
 package com.chimp.services;
 
 import com.chimp.commands.*;
+import com.chimp.commands.syntax.Command;
 
 import java.util.TreeMap;
 
+/**
+ * Holds commands.
+ * All commands that should be available must be added here.
+ */
 public abstract class CommandSet {
-    private static TreeMap<String, Command> commands;
 
+    /**
+     *
+     * @return map containing all commands with their names as keys
+     */
     public static TreeMap<String, Command> getCommands(){
-        commands = new TreeMap<>();
+        TreeMap<String, Command> commands = new TreeMap<>();
 
-        commands.put("/ban", new CommandBan());
-        commands.put("/exit", new CommandExit());
-        commands.put("/help", new CommandHelp());
-        commands.put("/kick", new CommandKick());
-        commands.put("/purge", new CommandPurge());
-        commands.put("/censor", new CommandCensor());
-        commands.put("/uncensor", new CommandUncensor());
-        commands.put("/censored", new CommandCensored());
-        commands.put("/config", new CommandConfig());
-        commands.put("/role", new CommandRole());
-        commands.put("/roles", new CommandRoles());
+        commands.put("ban", new CommandBan());
+        commands.put("censored", new CommandCensored());
+        commands.put("config", new CommandConfig());
+        commands.put("exit", new CommandExit());
+        commands.put("help", new CommandHelp());
+        commands.put("kick", new CommandKick());
+        commands.put("purge", new CommandPurge());
 
         return commands;
     }

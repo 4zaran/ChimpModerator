@@ -1,28 +1,26 @@
 package com.chimp.commands;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.NotNull;
+import com.chimp.commands.syntax.Command;
+import com.chimp.commands.syntax.CommandWrapper;
+import com.chimp.services.ContextService;
 
-import java.util.List;
-import java.util.TreeMap;
-
-public class CommandExit implements Command{
-    @Override
-    public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        event.getMessage().delete().complete();
-        event.getJDA().shutdown();
-        System.exit(0);
-    }
+public class CommandExit extends Command {
 
     @Override
-    public @NotNull String getDescription() {
+    public String getDescription() {
         return "Closes application";
     }
 
     @Override
-    public TreeMap<String, String> getSyntax() {
-        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
-        commandsWithDescriptions.put("/exit", "Closes application");
-        return commandsWithDescriptions;
+    public void execute(CommandWrapper wrapper) throws Exception {
+        wrapper.assignOptions();
+
+        if(wrapper.hasUnusedValues())
+            reportError("Too many parameters!", wrapper);
+
+        if(wrapper.isMessage())
+            wrapper.getEvent().getMessage().delete().complete();
+        ContextService.getAppService().getJda().shutdown();
+        System.exit(0);
     }
 }

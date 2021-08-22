@@ -1,49 +1,24 @@
 package com.chimp.commands;
 
+import com.chimp.commands.syntax.Command;
+import com.chimp.commands.syntax.CommandWrapper;
+import com.chimp.commands.syntax.Option;
+import com.chimp.commands.syntax.ParameterType;
 import com.chimp.services.CommandSet;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
-public class CommandHelp implements Command{
-    @Override
-    public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
-        boolean finished = false;
-        TreeMap<String, Command> commands = CommandSet.getCommands();
+public class CommandHelp extends Command {
 
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setColor(Color.red);
-        if (parameters.size() == 1) {
-            eb.setTitle("Available commands", null);
-            eb.setDescription("Note: use `/help [command]` for additional info");
-
-            for (HashMap.Entry<String, Command> entry : commands.entrySet()) {
-                eb.addField("`" + entry.getKey() + "`", entry.getValue().getDescription(), false);
-            }
-        } else {
-            String command = "/" + parameters.get(1).toLowerCase();
-            if (commands.containsKey(command)) {
-                eb.setTitle("Syntax for command `" + command + "`", null);
-                eb.setDescription("Arguments in `[ ]` are optional, arguments in `( )` are necessary");
-                Command command1 = commands.get(command);
-                TreeMap<String, String> allCommands = command1.getSyntax();
-                for (HashMap.Entry<String, String> commandDescriptions : allCommands.entrySet()) {
-                    eb.addField("`" + commandDescriptions.getKey() + "`", commandDescriptions.getValue(), false);
-                }
-            } else {
-                event.getChannel().sendMessage("No such command!").queue();
-                finished = true;
-            }
-        }
-        if (!finished) {
-            event.getChannel().sendMessage(eb.build()).queue();
-        }
-
+    public CommandHelp(){
+        addOption("command",
+                ParameterType.STRING,
+                false,
+                "Specifies the command to display help about");
+        addOption("detailed",
+                ParameterType.KEYWORD, false, "If given, all options will be described.");
     }
 
     @Override
@@ -52,10 +27,52 @@ public class CommandHelp implements Command{
     }
 
     @Override
-    public TreeMap<String, String> getSyntax() {
-        TreeMap<String, String> commandsWithDescriptions= new TreeMap<>();
-        commandsWithDescriptions.put("/help", "Displays help");
-        commandsWithDescriptions.put("/help [command]", "Displays syntax for specified command");
-        return commandsWithDescriptions;
+    public void execute(CommandWrapper wrapper) throws Exception {
+        wrapper.assignOptions();
+        TreeMap<String, Command> commands = CommandSet.getCommands();
+        StringBuilder sb = new StringBuilder();
+
+        String specificCommand = wrapper.getOption("command").asString();
+        String detailed = wrapper.getOption("detailed").asString();
+        boolean details = detailed != null && detailed.equals("");
+
+        // Just a general help
+        if(specificCommand == null){
+            sb.append("**Available commands:**\n");
+            sb.append("Note: use `/help [command]` for help with desired command," +
+                    " you can also add `detailed` to see whole syntax.\n\n");
+
+            for (HashMap.Entry<String, Command> entry : commands.entrySet()) {
+                sb.append("`").append(entry.getKey()).append("` - ").append(entry.getValue().getDescription()).append("\n");
+            }
+        }
+        else{   // Help for a specified command
+            if (commands.containsKey(specificCommand)) {
+                Command c = commands.get(specificCommand);
+                sb.append("**Help for `").append(specificCommand).append("`:**\n").append(c.getDescription());
+                sb.append("\nUse with `detailed` to see more (`!help [command] detailed`)\n");
+
+                List<Option> options = c.getOptions();
+                if(options.size() > 0)
+                    sb.append("**Options:**");
+                for (Option option : options) {
+                    sb.append("\n\n`").append(option.getName()).append("` - ").append(option.getDescription());
+                    sb.append("\n**Option type: **`").append(option.getType()).append("`, ");
+                    sb.append("**Required?** `").append(option.isRequired()).append("`");
+                    if(option.hasValue() && details) {
+                        Option value = option.getValue();
+                        sb.append("**Value:**\n");
+                        sb.append("> `").append(value.getName()).append("` - ");
+                        sb.append(value.getDescription()).append("\n");
+                        sb.append("> **Value type: **`").append(value.getType()).append("`, ");
+                        sb.append("**Required?** `").append(value.isRequired()).append("`");
+                    }
+                }
+                // TODO CHAR LIMIT
+            } else {
+                reportError("No such command!", wrapper);
+            }
+        }
+        reportInfo(sb.toString(), wrapper);
     }
 }

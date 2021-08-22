@@ -4,26 +4,40 @@ import com.chimp.services.AutoModerator;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
+/**
+ * Describes a user that violated the rules.
+ * Every time that another user violates for the first time, BadUser's object is created for this user.
+ * Holds current state of the violations.
+ */
 public class BadUser {
+    /** Defines in what state the user is in.
+     * @see BehaviourState
+     */
     private BehaviourState state;
-    private int violationAmount;
-    private final int warnAmount;
-    private final int kickAmount;
-    private final User user;
 
-    public BadUser(User user, int warnAmount, int kickAmount){
+    /**
+     * Defines how many times the user violated in current state.
+     * With every state change this number is changed to 0.
+     * <p>For example,
+     * with state {@code WARNED} and {@code violationAmount = 2} will mean that user has been warned two times.
+     */
+    private int violationAmount;
+
+    /** User that has violated. */
+    private final User user;
+    // TODO: 22.08.2021 change this to member, so violations will be separated for all guilds.
+
+    public BadUser(User user){
         this.user = user;
-        this.warnAmount = warnAmount;
-        this.kickAmount = kickAmount;
         this.violationAmount = 0;
         state = BehaviourState.WARNED;
     }
 
     public void hasViolated(TextChannel textChannel){
         while (true) {
-            if (state == BehaviourState.WARNED && violationAmount >= warnAmount)
+            if (state == BehaviourState.WARNED && violationAmount >= AutoModerator.getWarnAmount())
                 nextPunishment(textChannel);
-            else if (state == BehaviourState.KICKED && violationAmount >= kickAmount) {
+            else if (state == BehaviourState.KICKED && violationAmount >= AutoModerator.getKickAmount()) {
                 nextPunishment(textChannel);
             }
             else{
@@ -78,14 +92,6 @@ public class BadUser {
             state = BehaviourState.BANNED;
             violationAmount = 0;
         }
-    }
-
-    public int getViolationAmount() {
-        return violationAmount;
-    }
-
-    public void setViolationAmount(int violationAmount) {
-        this.violationAmount = violationAmount;
     }
 
     public User getUser() {

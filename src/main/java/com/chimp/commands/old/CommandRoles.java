@@ -1,4 +1,4 @@
-package com.chimp.commands;
+package com.chimp.commands.old;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
@@ -10,7 +10,10 @@ import java.awt.*;
 import java.util.List;
 import java.util.TreeMap;
 
-public class CommandRoles implements Command{
+/**
+ * @deprecated not in use
+ */
+public class CommandRoles implements Command {
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         StringBuilder availableRoles = new StringBuilder();

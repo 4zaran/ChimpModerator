@@ -1,4 +1,4 @@
-package com.chimp.commands;
+package com.chimp.commands.old;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -11,7 +11,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.TreeMap;
 
-public class CommandRole implements Command{
+/**
+ * @deprecated not in use
+ */
+public class CommandRole implements Command {
     @Override
     public void execute(@NotNull MessageReceivedEvent event, List<String> parameters) {
         if(parameters.size() == 2){

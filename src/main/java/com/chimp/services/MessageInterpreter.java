@@ -1,17 +1,29 @@
 package com.chimp.services;
 
-import com.chimp.commands.Command;
+import com.chimp.commands.syntax.Command;
+import com.chimp.commands.syntax.CommandWrapper;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Handles messages. Checks if a message contains executable command or if message violates any rules.
+ */
 public class MessageInterpreter {
+    /** */
+    private static final String OPERATOR = "/";
+
+    /** Commands repository. Command must be added to this map to be usable. */
     private final TreeMap<String, Command> commands;
+
+    /** AutoModerator instance. Checks for violations and executes punishments. */
     private final AutoModerator autoModerator;
 
     public MessageInterpreter(){
@@ -19,27 +31,68 @@ public class MessageInterpreter {
         autoModerator = new AutoModerator();
     }
 
-    public void handleMessage(@Nonnull MessageReceivedEvent event) {
-        List<String> messageParameters = splitMessage(event.getMessage().getContentRaw());
+    /** Handles messages. This method is executed when messages are sent from main window. */
+    public void handleMessage(String message, String logArea){
+        List<String> messageParameters = splitMessage(message);
+        CommandWrapper wrapper = new CommandWrapper(messageParameters, logArea);
 
-        // Ignore blank messages (for example embeds)
-        if (event.getMessage().getContentRaw().equals("")) return;
-
-        // Search for command and execute it
-        if (commands.containsKey(messageParameters.get(0).toLowerCase())){
-            Command c = commands.get(messageParameters.get(0).toLowerCase());
-            c.execute(event, messageParameters);
-
-            // Purge deletes message containing command by itself
-            if (!messageParameters.get(0).equalsIgnoreCase("/purge")) {
-                event.getMessage().delete().queue();
-            }
-        }
-        // Bots are not violating, right?
-        else if (!event.getAuthor().isBot() && AutoModerator.isEnabled())
-            autoModerator.checkViolation(event);
+        if(message.startsWith(ContextService.getPrefix()))
+            searchAndExecute(wrapper);
     }
 
+    /** Handles messages. This method is executed when a message is received. */
+    public void handleMessage(@Nonnull MessageReceivedEvent event) {
+        String content = event.getMessage().getContentRaw();
+
+        Member self = event.getGuild().getSelfMember();
+        Member author = event.getMessage().getMember();
+
+        // Check for violation
+        // Bots are not violating, right?
+        // TODO VIOLATION IN COMMANDS
+        assert author != null;
+        if (AutoModerator.isEnabled() && !author.equals(self))
+            autoModerator.checkViolation(event);
+
+        if(content.startsWith(ContextService.getPrefix())) {
+            List<String> messageParameters = splitMessage(content);
+            CommandWrapper wrapper = new CommandWrapper(event, messageParameters);
+            searchAndExecute(wrapper);
+        }
+    }
+
+    /**
+     * Searches for a command and executes it.
+     * @param wrapper object containing all information about message
+     */
+    public void searchAndExecute(CommandWrapper wrapper) {
+        // Search for command and execute it
+        if (commands.containsKey(wrapper.getCommandName())) {
+            Command c = commands.get(wrapper.getCommandName());
+            try {
+                c.execute(wrapper);
+            } catch (Exception e) {
+                if (e.getMessage() == null)
+                    ContextService.getLogger().logError(e.getCause() + Arrays.toString(e.getStackTrace()), wrapper.getLogArea());
+                else ContextService.getLogger().logError(e.getMessage(), wrapper.getLogArea());
+            }
+        } else {
+            String error = "Command \"" + wrapper.getCommandName() + "\" not found!";
+            if(wrapper.isMessage()) wrapper.getTextChannel().sendMessage(error).queue();
+            else ContextService.getLogger().logError(error, wrapper.getLogArea());
+        }
+        // Delete message containing command
+        if (wrapper.isMessage())
+            wrapper.getEvent().getMessage().delete().queue();
+    }
+
+    /**
+     * Splits message into list of strings.
+     * Message is divided into single words OR groped together with quotation sign (").
+     * Note that quotation signs are deleted.
+     * @param message string containing whole message
+     * @return list containing all expressions from message
+     */
     public List<String> splitMessage(String message){
         List<String> parameters = new ArrayList<>();
         Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(message);
@@ -48,34 +101,11 @@ public class MessageInterpreter {
         return parameters;
     }
 
+    /**
+     * Return how many commands are in the command repository.
+     * @return string telling command count
+     */
     public String getCommandCount(){
         return ("Loaded " + commands.size() + " valid commands.");
     }
 }
-
-
-/*
-    public String[] splitMessage(String message){
-        String[] parameters = message.split("\\s+");
-        if(message.contains("\"")){
-            // Check if quote marks are even
-            int quoteCount = 0;
-            for (int i = 0; i < message.length(); i++) {
-                if (message.charAt(i) == '\"')
-                    quoteCount++;
-            }
-            if(quoteCount % 2 == 0){
-                for (String parameter : parameters) {
-                    if (parameter.contains("\"")) {
-
-                    }
-                }
-            }
-            else{
-                // exception...
-            }
-
-        }
-        return parameters;
-    }
-*/

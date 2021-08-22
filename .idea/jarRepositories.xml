@@ -21,10 +21,5 @@
       <option name="name" value="BintrayJCenter" />
       <option name="url" value="https://jcenter.bintray.com/" />
     </remote-repository>
-    <remote-repository>
-      <option name="id" value="4e9a62bb-cf52-48f3-a4ef-99e5e395f833" />
-      <option name="name" value="4e9a62bb-cf52-48f3-a4ef-99e5e395f833" />
-      <option name="url" value="https://maven.java.net/content/groups/public/" />
-    </remote-repository>
   </component>
 </project>
