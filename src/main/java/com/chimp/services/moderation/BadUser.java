@@ -1,8 +1,8 @@
-package com.chimp.moderation;
+package com.chimp.services.moderation;
 
-import com.chimp.services.AutoModerator;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
 import java.text.MessageFormat;
 
@@ -28,56 +28,55 @@ public class BadUser {
      */
     private int violationAmount;
 
-    /** User that has violated. */
-    private final User user;
-    // TODO: 22.08.2021 change this to member, so violations will be separated for all guilds.
+    /** Server's member that has violated. */
+    private final Member member;
 
-    public BadUser(User user){
-        this.user = user;
+    public BadUser(Member member){
+        this.member = member;
         this.violationAmount = 0;
         state = BehaviourState.WARNED;
     }
 
     public void hasViolated(TextChannel textChannel){
+        Guild guild = member.getGuild();
         while (true) {
-            if (state == BehaviourState.WARNED && violationAmount >= AutoModerator.getWarnAmount())
+            if (state == BehaviourState.WARNED && violationAmount >= AutoModerator.getWarnAmount(guild))
                 nextPunishment();
-            else if (state == BehaviourState.KICKED && violationAmount >= AutoModerator.getKickAmount()) {
+            else if (state == BehaviourState.KICKED && violationAmount >= AutoModerator.getKickAmount(guild)) {
                 nextPunishment();
             }
-            else{
-                break;
-            }
+            else break;
         }
         punishment(textChannel);
     }
 
     public void punishment(TextChannel textChannel){
         violationAmount++;
+        Guild guild = textChannel.getGuild();
         if(state == BehaviourState.WARNED){
             textChannel.sendMessage(
                     String.format("**Warning** <@!%s>! You have violated the rules!\n" +
                                     "Warnings issued: %d\n" +
                                     "Getting more than %d warnings will cause a kick or ban from the server!",
-                            user.getId(),
+                            member.getId(),
                             violationAmount,
-                            AutoModerator.getWarnAmount())).queue();
+                            AutoModerator.getWarnAmount(guild))).queue();
         }
         if(state == BehaviourState.KICKED){
             textChannel.sendMessage(
                     String.format("**Kicking** <@!%s> for violating the rules.\n" +
                                     "Kicks issued: %d\n" +
                                     "Getting more than %d kicks will cause ban from the server!",
-                            user.getId(),
+                            member.getId(),
                             violationAmount,
-                            AutoModerator.getKickAmount())).queue();
+                            AutoModerator.getKickAmount(guild))).queue();
             executeCommand("kick", textChannel);
         }
         if(state == BehaviourState.BANNED){
             textChannel.sendMessage(
                     String.format("**Banning** <@!%s> for violating the rules. \n" +
                                     "Bans issued: %d",
-                            user.getId(),
+                            member.getId(),
                             violationAmount)).queue();
             executeCommand("ban", textChannel);
         }
@@ -99,15 +98,15 @@ public class BadUser {
         }
     }
 
-    public User getUser() {
-        return user;
+    public Member getMember() {
+        return member;
     }
 
     private void executeCommand(String commandName, TextChannel textChannel) {
         String command = MessageFormat.format("{0}{1} <@!{2}> \"Violation of the rules\"",
                 getPrefix(),
                 commandName,
-                user.getId());
+                member.getId());
         String logArea = MessageFormat.format("{0}@{1}", textChannel.getId(), textChannel.getGuild().getId());
         getInterpreter().handleMessage(command, logArea);
     }

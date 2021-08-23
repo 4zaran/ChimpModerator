@@ -1,4 +1,4 @@
-package com.chimp.moderation;
+package com.chimp.services.moderation;
 
 /**
  * Possible states of {@link BadUser}. When user violates, some kind of punishment is executed.

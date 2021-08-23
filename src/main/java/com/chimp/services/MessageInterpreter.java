@@ -1,5 +1,6 @@
 package com.chimp.services;
 
+import com.chimp.services.moderation.AutoModerator;
 import com.chimp.services.syntax.Command;
 import com.chimp.services.syntax.CommandSet;
 import com.chimp.services.syntax.CommandWrapper;
@@ -17,8 +18,6 @@ import java.util.regex.Pattern;
  * Handles messages. Checks if a message contains executable command or if message violates any rules.
  */
 public class MessageInterpreter {
-    /** */
-    private static final String OPERATOR = "/";
 
     /** Commands repository. Command must be added to this map to be usable. */
     private final TreeMap<String, Command> commands;
@@ -51,7 +50,7 @@ public class MessageInterpreter {
         // Bots are not violating, right?
         // TODO VIOLATION IN COMMANDS
         assert author != null;
-        if (AutoModerator.isEnabled() && !author.equals(self))
+        if (AutoModerator.isEnabled(event.getGuild()) && !author.equals(self))
             autoModerator.checkViolation(event);
 
         if(content.startsWith(ContextService.getPrefix())) {

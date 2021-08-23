@@ -1,10 +1,11 @@
 package com.chimp.commands;
 
-import com.chimp.services.AutoModerator;
+import com.chimp.services.moderation.AutoModerator;
 import com.chimp.services.ContextService;
 import com.chimp.services.syntax.Command;
 import com.chimp.services.syntax.CommandWrapper;
 import com.chimp.services.syntax.ParameterType;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -58,9 +59,11 @@ public class CommandConfig extends Command {
     public void execute(CommandWrapper wrapper) throws Exception {
         wrapper.assignOptions();
 
+        Guild guild = wrapper.getGuild();
+
         if(wrapper.hasUnusedValues())
             reportError("Too many parameters!", wrapper);
-        if(wrapper.hasNoOptions())
+        if(wrapper.hasNoOptions()) // TODO PRINT WHOLE CONFIG?
             reportError("No options provided! Use " + ContextService.getPrefix() + "help to see available options.", wrapper);
 
         Iterator<Map.Entry<String, String>> it = wrapper.getOptions().entrySet().iterator();
@@ -70,21 +73,21 @@ public class CommandConfig extends Command {
             switch (pair.getKey()){
                 case "automoderator":
                     if(!value.equals("")){
-                        AutoModerator.setEnabled(Boolean.parseBoolean(value));
+                        AutoModerator.setEnabled(Boolean.parseBoolean(value), guild);
                     }
-                    if(AutoModerator.isEnabled())
+                    if(AutoModerator.isEnabled(guild))
                         reportInfo("AutoModerator is now enabled!", wrapper);
                     else reportInfo("AutoModerator is now disabled!", wrapper);
                     break;
                 case "warn":
                     if(!value.equals(""))
-                        AutoModerator.setWarnAmount(Integer.parseInt(value));
-                    reportInfo("Warn count is now " + AutoModerator.getWarnAmount() + ".", wrapper);
+                        AutoModerator.setWarnAmount(Integer.parseInt(value), guild);
+                    reportInfo("Warn count is now " + AutoModerator.getWarnAmount(guild) + ".", wrapper);
                     break;
                 case "kick":
                     if(!value.equals(""))
-                        AutoModerator.setKickAmount(Integer.parseInt(value));
-                    reportInfo("Kick count is now " + AutoModerator.getKickAmount() + ".", wrapper);
+                        AutoModerator.setKickAmount(Integer.parseInt(value), guild);
+                    reportInfo("Kick count is now " + AutoModerator.getKickAmount(guild) + ".", wrapper);
                     break;
                 default:
                     reportError("Unknown keyword!", wrapper);

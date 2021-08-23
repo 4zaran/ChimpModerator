@@ -1,6 +1,6 @@
 package com.chimp.commands;
 
-import com.chimp.services.AutoModerator;
+import com.chimp.services.moderation.AutoModerator;
 import com.chimp.services.syntax.Command;
 import com.chimp.services.syntax.CommandWrapper;
 import com.chimp.services.syntax.OptionConverter;
@@ -30,7 +30,7 @@ public class CommandCensored extends Command {
 
         // No options/keywords - Display simple list of censored expressions.
         if(wrapper.hasNoOptions()){
-            String censored = AutoModerator.censored();
+            String censored = AutoModerator.getCensored(wrapper.getGuild());
             if(censored.length() > 0)
                 reportInfo("Censored expressions: " + censored, wrapper);
             else reportInfo("No censored expressions found.", wrapper);
@@ -52,7 +52,7 @@ public class CommandCensored extends Command {
             while (getOption != null) {
                 expression = getOption.asString();
 
-                if (AutoModerator.censor(expression)) {
+                if (AutoModerator.addCensored(expression, wrapper.getGuild())) {
                     if (!success.contains(expression))
                         success.add(expression);
                 } else if (!error.contains(expression))
@@ -85,7 +85,7 @@ public class CommandCensored extends Command {
             while(getOption != null){
                 expression = getOption.asString();
 
-                if (AutoModerator.removeCensored(expression)){
+                if (AutoModerator.removeCensored(expression, wrapper.getGuild())){
                     if(!success.contains(expression))
                         success.add(expression);
                 }
