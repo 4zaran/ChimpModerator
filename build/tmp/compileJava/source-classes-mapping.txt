@@ -3,64 +3,64 @@ com/chimp/services/builders/MessageBuilder.java
 com/chimp/services/builders/PreviewMessageBuilder.java
  com.chimp.services.builders.PreviewMessageBuilder
  com.chimp.services.builders.PreviewMessageBuilder$1
-com/chimp/commands/CommandPurge.java
- com.chimp.commands.CommandPurge
+com/chimp/window/WindowMain.java
+ com.chimp.window.WindowMain
 com/chimp/window/ComboItem.java
  com.chimp.window.ComboItem
 com/chimp/moderation/BehaviourState.java
  com.chimp.moderation.BehaviourState
 com/chimp/commands/old/CommandRole.java
  com.chimp.commands.old.CommandRole
-com/chimp/commands/CommandBan.java
- com.chimp.commands.CommandBan
+com/chimp/moderation/BadUser.java
+ com.chimp.moderation.BadUser
 com/chimp/commands/old/Command.java
  com.chimp.commands.old.Command
 com/chimp/services/AutoModerator.java
  com.chimp.services.AutoModerator
-com/chimp/services/MessageInterpreter.java
- com.chimp.services.MessageInterpreter
+com/chimp/window/WindowManager.java
+ com.chimp.window.WindowManager
+ com.chimp.window.WindowManager$1
 com/chimp/services/syntax/Option.java
  com.chimp.services.syntax.Option
 com/chimp/services/JDAService.java
  com.chimp.services.JDAService
-com/chimp/services/syntax/CommandSet.java
- com.chimp.services.syntax.CommandSet
-com/chimp/commands/CommandHelp.java
- com.chimp.commands.CommandHelp
-com/chimp/commands/old/CommandCensor.java
- com.chimp.commands.old.CommandCensor
-com/chimp/moderation/BadUser.java
- com.chimp.moderation.BadUser
-com/chimp/services/syntax/Command.java
- com.chimp.services.syntax.Command
+com/chimp/services/syntax/OptionConverter.java
+ com.chimp.services.syntax.OptionConverter
+com/chimp/services/syntax/ParameterType.java
+ com.chimp.services.syntax.ParameterType
 com/chimp/commands/old/CommandRoles.java
  com.chimp.commands.old.CommandRoles
 com/chimp/services/syntax/ParameterParser.java
  com.chimp.services.syntax.ParameterParser
+com/chimp/services/Logger.java
+ com.chimp.services.Logger
 com/chimp/ApplicationMain.java
  com.chimp.ApplicationMain
-com/chimp/commands/CommandConfig.java
- com.chimp.commands.CommandConfig
-com/chimp/services/syntax/OptionConverter.java
- com.chimp.services.syntax.OptionConverter
-com/chimp/commands/old/CommandUncensor.java
- com.chimp.commands.old.CommandUncensor
+com/chimp/services/syntax/CommandSet.java
+ com.chimp.services.syntax.CommandSet
+com/chimp/commands/CommandPurge.java
+ com.chimp.commands.CommandPurge
+com/chimp/commands/CommandBan.java
+ com.chimp.commands.CommandBan
+com/chimp/services/ContextService.java
+ com.chimp.services.ContextService
 com/chimp/commands/CommandCensored.java
  com.chimp.commands.CommandCensored
 com/chimp/commands/CommandExit.java
  com.chimp.commands.CommandExit
 com/chimp/commands/CommandKick.java
  com.chimp.commands.CommandKick
-com/chimp/services/syntax/ParameterType.java
- com.chimp.services.syntax.ParameterType
-com/chimp/window/WindowManager.java
- com.chimp.window.WindowManager
- com.chimp.window.WindowManager$1
+com/chimp/services/MessageInterpreter.java
+ com.chimp.services.MessageInterpreter
 com/chimp/services/syntax/CommandWrapper.java
  com.chimp.services.syntax.CommandWrapper
-com/chimp/services/Logger.java
- com.chimp.services.Logger
-com/chimp/services/ContextService.java
- com.chimp.services.ContextService
-com/chimp/window/WindowMain.java
- com.chimp.window.WindowMain
+com/chimp/commands/old/CommandCensor.java
+ com.chimp.commands.old.CommandCensor
+com/chimp/commands/old/CommandUncensor.java
+ com.chimp.commands.old.CommandUncensor
+com/chimp/services/syntax/Command.java
+ com.chimp.services.syntax.Command
+com/chimp/commands/CommandHelp.java
+ com.chimp.commands.CommandHelp
+com/chimp/commands/CommandConfig.java
+ com.chimp.commands.CommandConfig

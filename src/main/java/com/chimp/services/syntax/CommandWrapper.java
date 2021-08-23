@@ -8,10 +8,13 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.chimp.services.ContextService.getPrefix;
 
@@ -91,10 +94,9 @@ public class CommandWrapper {
         this.logArea = logArea;
 
         JDA jda = ContextService.getAppService().getJda();
-        WindowMain window = ContextService.getWindow();
-        ComboItem channel = (ComboItem) window.getTextChannelsBox().getSelectedItem();
-        assert channel != null;
-        this.textChannel = jda.getTextChannelById(channel.getId());
+        String channelId = getTextChannelIdFromLogAreaString(logArea);
+        assert channelId != null;
+        this.textChannel = jda.getTextChannelById(channelId);
     }
 
 
@@ -262,6 +264,14 @@ public class CommandWrapper {
      */
     private boolean checkType(ParameterType typeToCheck, ParameterType optionsType) {
         return typeToCheck != ParameterType.ALREADY_USED && typeToCheck == optionsType || optionsType == ParameterType.ANY;
+    }
+
+    private @Nullable String getTextChannelIdFromLogAreaString(String logArea){
+        Pattern p = Pattern.compile("([0-9]+)@([0-9]+)");
+        Matcher m = p.matcher(logArea);
+        if(m.matches())
+            return m.group(1);
+        return null;
     }
 
 
