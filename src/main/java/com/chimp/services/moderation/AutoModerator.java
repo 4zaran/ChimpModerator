@@ -36,8 +36,9 @@ public class AutoModerator {
     }
 
     /**
-     * Add specified expression to forbidden ones
+     * Add specified expression to forbidden ones for specified guild
      * @param expression to censor
+     * @param guild that will have specified expression censored
      * @return false if expression is already censored
      */
     public static boolean addCensored(String expression, Guild guild){
@@ -52,8 +53,9 @@ public class AutoModerator {
     }
 
     /**
-     * Remove specified expression from forbidden ones
+     * Remove specified expression from forbidden ones for specified guild
      * @param expression string to remove
+     * @param guild that will have specified expression removed
      * @return true if operation was successful
      */
     public static boolean removeCensored(String expression, Guild guild){
@@ -68,7 +70,7 @@ public class AutoModerator {
     }
 
     /**
-     * Builds a string of all censored expressions to display
+     * Builds a string of all censored expressions for specified guild
      * @return all censored expression in one string
      */
     public static String getCensored(Guild guild){
@@ -90,6 +92,11 @@ public class AutoModerator {
 
     // PRIVATE METHODS
 
+    /**
+     * Adds new restriction's object for specified guild
+     * @param guild to create restrictions for
+     * @return created object
+     */
     private static GuildRestrictions addGuildRestrictions(Guild guild){
         GuildRestrictions restrictions = new GuildRestrictions(guild);
         guilds.add(restrictions);
@@ -97,7 +104,7 @@ public class AutoModerator {
     }
 
     /**
-     * Checks if a message contains any of censored expressions
+     * Checks if a message contains any of censored expressions.
      * @param event event of receiving a message
      * @return true if contains any censored expression
      */
@@ -113,23 +120,40 @@ public class AutoModerator {
 
     // GETTERS
 
+    /**
+     * Returns the information about moderation module ({@code AutoModerator}) being enabled for specified guild.
+     * @param guild to check if it has enabled moderator
+     * @return true if moderator is enabled, false if not
+     */
     public static boolean isEnabled(Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         return restrictions.isEnabled();
     }
 
+    /**
+     * Returns warn amount for specified guild.
+     * It calls the {@code getWarnAmount()} in corresponding GuildRestrictions object.
+     * @param guild  to get the value for
+     * @return warn amount
+     */
     public static int getWarnAmount(Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         return restrictions.getWarnAmount();
     }
 
+    /**
+     * Returns kick amount for specified guild.
+     * It calls the {@code getKickAmount()} in corresponding GuildRestrictions object.
+     * @param guild  to get the value for
+     * @return kick amount for specified guild
+     */
     public static int getKickAmount(Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         return restrictions.getKickAmount();
     }
 
     /**
-     * Searches the bad user list for author of the message
+     * Searches the bad user list for author of the message.
      * @param event received message
      * @return BadUser instance for author of the message or null if not found
      */
@@ -142,6 +166,11 @@ public class AutoModerator {
         return restrictions.addBadUser(event.getMember());
     }
 
+    /**
+     * Returns the GuildRestriction object for specified guild.
+     * @param guild to get the restrictions for
+     * @return GuildRestriction object for guild
+     */
     private static GuildRestrictions getGuildRestrictions(Guild guild){
         for (GuildRestrictions g : guilds) {
             if(g.getGuild().equals(guild))
@@ -152,16 +181,31 @@ public class AutoModerator {
 
     // SETTERS
 
+    /**
+     * Sets the moderator's module enabled state for specified guild
+     * @param enabled true to enable, false to disable
+     * @param guild to set the value for
+     */
     public static void setEnabled(boolean enabled, Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         restrictions.setEnabled(enabled);
     }
 
+    /**
+     * Sets the moderator's warn amount for specified guild
+     * @param warnAmount amount of warns
+     * @param guild to set the value for
+     */
     public static void setWarnAmount(int warnAmount, Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         restrictions.setWarnAmount(warnAmount);
     }
 
+    /**
+     * Sets the moderator's kick amount for specified guild
+     * @param kickAmount amount of kicks
+     * @param guild to set the value for
+     */
     public static void setKickAmount(int kickAmount, Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         restrictions.setKickAmount(kickAmount);
