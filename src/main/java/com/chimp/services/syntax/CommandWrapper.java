@@ -76,6 +76,7 @@ public class CommandWrapper {
 
         this.isMessage = true;
         this.event = event;
+        // TODO CREATE PARSER FOR THIS
         this.logArea = event.getTextChannel().getId() + "@" + event.getGuild().getId();
 
         this.textChannel = event.getTextChannel();
@@ -266,6 +267,11 @@ public class CommandWrapper {
         return typeToCheck != ParameterType.ALREADY_USED && typeToCheck == optionsType || optionsType == ParameterType.ANY;
     }
 
+    /**
+     * Extrudes a channel id from log area code
+     * @param logArea containing channelID@guildID
+     * @return channel id
+     */
     private @Nullable String getTextChannelIdFromLogAreaString(String logArea){
         Pattern p = Pattern.compile("([0-9]+)@([0-9]+)");
         Matcher m = p.matcher(logArea);
@@ -274,6 +280,18 @@ public class CommandWrapper {
         return null;
     }
 
+    /**
+     * Extrudes a guild id from log area code
+     * @param logArea containing channelID@guildID
+     * @return guild id
+     */
+    private @Nullable String getGuildIdFromLogAreaString(String logArea){
+        Pattern p = Pattern.compile("([0-9]+)@([0-9]+)");
+        Matcher m = p.matcher(logArea);
+        if(m.matches())
+            return m.group(1);
+        return null;
+    }
 
     // -- GETTERS --
 
