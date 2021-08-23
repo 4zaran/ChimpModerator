@@ -9,7 +9,7 @@ import java.util.TreeMap;
 /**
  * @deprecated because it could handle only messages already sent to discord.
  *
- * Replaced with {@link com.chimp.commands.syntax.Command}
+ * Replaced with {@link com.chimp.services.syntax.Command}
  */
 public interface Command {
     void execute(@Nonnull MessageReceivedEvent event, List<String> parameters);

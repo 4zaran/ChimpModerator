@@ -1,10 +1,10 @@
 package com.chimp.commands;
 
-import com.chimp.commands.syntax.Command;
-import com.chimp.commands.syntax.CommandWrapper;
-import com.chimp.commands.syntax.OptionConverter;
-import com.chimp.commands.syntax.ParameterType;
 import com.chimp.services.AutoModerator;
+import com.chimp.services.syntax.Command;
+import com.chimp.services.syntax.CommandWrapper;
+import com.chimp.services.syntax.OptionConverter;
+import com.chimp.services.syntax.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,14 +10,14 @@ import javax.security.auth.login.LoginException;
  * This class holds the {@link JDA} object for all other classes and handles it's all operations
  * (creating object, connecting, disconnecting, exception handling).
  */
-public class ApplicationService {
+public class JDAService {
     private JDA jda;
     private final JDABuilder jdaBuild;
 
     /**
      * Initiates the JDABuilder
      */
-    public ApplicationService() {
+    public JDAService() {
         String TOKEN = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
         jdaBuild = JDABuilder
                 .createDefault(TOKEN)

@@ -1,13 +1,13 @@
 package com.chimp.services;
 
-import com.chimp.commands.syntax.Command;
-import com.chimp.commands.syntax.CommandWrapper;
+import com.chimp.services.syntax.Command;
+import com.chimp.services.syntax.CommandSet;
+import com.chimp.services.syntax.CommandWrapper;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -72,9 +72,11 @@ public class MessageInterpreter {
             try {
                 c.execute(wrapper);
             } catch (Exception e) {
+                String error;
                 if (e.getMessage() == null)
-                    ContextService.getLogger().logError(e.getCause() + Arrays.toString(e.getStackTrace()), wrapper.getLogArea());
-                else ContextService.getLogger().logError(e.getMessage(), wrapper.getLogArea());
+                    error = "Cause: " + e.getCause() + ", " + e.getLocalizedMessage();
+                else error = e.getMessage();
+                ContextService.getLogger().logError(error, wrapper.getLogArea());
             }
         } else {
             String error = "Command \"" + wrapper.getCommandName() + "\" not found!";

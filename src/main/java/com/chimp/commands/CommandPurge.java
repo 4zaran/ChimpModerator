@@ -1,8 +1,8 @@
 package com.chimp.commands;
 
-import com.chimp.commands.syntax.Command;
-import com.chimp.commands.syntax.CommandWrapper;
-import com.chimp.commands.syntax.ParameterType;
+import com.chimp.services.syntax.Command;
+import com.chimp.services.syntax.CommandWrapper;
+import com.chimp.services.syntax.ParameterType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -139,7 +139,10 @@ public class CommandPurge extends Command {
             if(!silent) reportInfo("Deleting 1 message...", wrapper);
             messages.get(0).delete().queue();
         }
-        else if (!silent) reportInfo(String.format("Deleting %d messages...", messages.size()), wrapper);
+        else{
+            if (!silent) reportInfo(String.format("Deleting %d messages...", messages.size()), wrapper);
+            channel.purgeMessages(messages);
+        }
     }
 
     @NotNull

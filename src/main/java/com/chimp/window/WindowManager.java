@@ -1,7 +1,7 @@
 package com.chimp.window;
 
-import com.chimp.services.ApplicationService;
 import com.chimp.services.ContextService;
+import com.chimp.services.JDAService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -18,7 +18,7 @@ public class WindowManager extends WindowAdapter {
     /** Object of application's main window */
     private final WindowMain window;
     /** Object holding JDA main class. */
-    private final ApplicationService appService;
+    private final JDAService appService;
     /** Keeps the last sent message to restore it's content with up arrow key ({@code VK_UP})*/
     private String lastMessage;
 
@@ -115,8 +115,7 @@ public class WindowManager extends WindowAdapter {
         TextChannel textChannel = appService.getJda().getTextChannelById(channel.getId());
 
         if (!Objects.equals(messageToSend, "")) {
-            // TODO ADD HANDLING FOR COMMANDS
-            if(messageToSend.startsWith("/")){
+            if(messageToSend.startsWith(ContextService.getPrefix())){
                 ContextService.getInterpreter().handleMessage(messageToSend , window.getCurrentLogArea());
             }
             else{

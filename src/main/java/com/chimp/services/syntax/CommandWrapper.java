@@ -1,6 +1,5 @@
-package com.chimp.commands.syntax;
+package com.chimp.services.syntax;
 
-import com.chimp.services.CommandSet;
 import com.chimp.services.ContextService;
 import com.chimp.window.ComboItem;
 import com.chimp.window.WindowMain;

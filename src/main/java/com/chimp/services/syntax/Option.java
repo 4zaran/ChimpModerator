@@ -1,4 +1,4 @@
-package com.chimp.commands.syntax;
+package com.chimp.services.syntax;
 
 /**
  * Determines a single command's option.

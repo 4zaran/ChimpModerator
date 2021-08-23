@@ -1,4 +1,4 @@
-package com.chimp.commands.syntax;
+package com.chimp.services.syntax;
 
 import java.util.List;
 import java.util.regex.Matcher;

@@ -1,4 +1,4 @@
-package com.chimp.commands.syntax;
+package com.chimp.services.syntax;
 
 import com.chimp.services.ContextService;
 import net.dv8tion.jda.api.entities.User;

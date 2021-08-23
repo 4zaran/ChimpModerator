@@ -1,10 +1,6 @@
 package com.chimp.commands;
 
-import com.chimp.commands.syntax.Command;
-import com.chimp.commands.syntax.CommandWrapper;
-import com.chimp.commands.syntax.Option;
-import com.chimp.commands.syntax.ParameterType;
-import com.chimp.services.CommandSet;
+import com.chimp.services.syntax.*;
 
 import java.util.HashMap;
 import java.util.List;

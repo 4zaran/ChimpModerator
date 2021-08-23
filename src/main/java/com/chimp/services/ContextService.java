@@ -12,14 +12,14 @@ public class ContextService {
     private static Logger logger;
     private static WindowMain window;
     private static WindowManager manager;
-    private static ApplicationService appService;
+    private static JDAService appService;
     private static MessageInterpreter interpreter;
 
     public static void create(){
         prefix = "!";
         window = new WindowMain();
         logger = new Logger();
-        appService = new ApplicationService();
+        appService = new JDAService();
         manager = new WindowManager();
         interpreter = new MessageInterpreter();
     }
@@ -37,7 +37,7 @@ public class ContextService {
         return manager;
     }
 
-    public static ApplicationService getAppService() {
+    public static JDAService getAppService() {
         return appService;
     }
 

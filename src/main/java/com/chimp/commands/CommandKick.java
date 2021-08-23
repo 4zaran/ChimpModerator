@@ -1,8 +1,8 @@
 package com.chimp.commands;
 
-import com.chimp.commands.syntax.Command;
-import com.chimp.commands.syntax.CommandWrapper;
-import com.chimp.commands.syntax.ParameterType;
+import com.chimp.services.syntax.Command;
+import com.chimp.services.syntax.CommandWrapper;
+import com.chimp.services.syntax.ParameterType;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

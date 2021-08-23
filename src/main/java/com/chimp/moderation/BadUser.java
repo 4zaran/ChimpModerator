@@ -4,6 +4,11 @@ import com.chimp.services.AutoModerator;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
+import java.text.MessageFormat;
+
+import static com.chimp.services.ContextService.getInterpreter;
+import static com.chimp.services.ContextService.getPrefix;
+
 /**
  * Describes a user that violated the rules.
  * Every time that another user violates for the first time, BadUser's object is created for this user.
@@ -36,9 +41,9 @@ public class BadUser {
     public void hasViolated(TextChannel textChannel){
         while (true) {
             if (state == BehaviourState.WARNED && violationAmount >= AutoModerator.getWarnAmount())
-                nextPunishment(textChannel);
+                nextPunishment();
             else if (state == BehaviourState.KICKED && violationAmount >= AutoModerator.getKickAmount()) {
-                nextPunishment(textChannel);
+                nextPunishment();
             }
             else{
                 break;
@@ -66,7 +71,7 @@ public class BadUser {
                             user.getId(),
                             violationAmount,
                             AutoModerator.getKickAmount())).queue();
-            textChannel.sendMessage(String.format("/kick <@!%s> \"Violation of the rules\"", user.getId())).queue();
+            executeCommand("kick", textChannel);
         }
         if(state == BehaviourState.BANNED){
             textChannel.sendMessage(
@@ -74,11 +79,11 @@ public class BadUser {
                                     "Bans issued: %d",
                             user.getId(),
                             violationAmount)).queue();
-            textChannel.sendMessage(String.format("/ban <@!%s> \"Violation of the rules\"", user.getId())).queue();
+            executeCommand("ban", textChannel);
         }
     }
 
-    public void nextPunishment(TextChannel textChannel){
+    public void nextPunishment(){
         if(state == BehaviourState.CIVIL) {
             state = BehaviourState.WARNED;
             violationAmount = 0;
@@ -96,5 +101,14 @@ public class BadUser {
 
     public User getUser() {
         return user;
+    }
+
+    private void executeCommand(String commandName, TextChannel textChannel) {
+        String command = MessageFormat.format("{0}{1} <@!{2}> \"Violation of the rules\"",
+                getPrefix(),
+                commandName,
+                user.getId());
+        String logArea = MessageFormat.format("{0}@{1}", textChannel.getId(), textChannel.getGuild().getId());
+        getInterpreter().handleMessage(command, logArea);
     }
 }

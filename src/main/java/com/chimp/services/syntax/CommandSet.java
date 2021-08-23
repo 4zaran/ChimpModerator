@@ -1,7 +1,6 @@
-package com.chimp.services;
+package com.chimp.services.syntax;
 
 import com.chimp.commands.*;
-import com.chimp.commands.syntax.Command;
 
 import java.util.TreeMap;
 
