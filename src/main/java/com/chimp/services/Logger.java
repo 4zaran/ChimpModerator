@@ -69,6 +69,14 @@ public class Logger {
     }
 
     /**
+     * Adds an error to default (console) view
+     * @param error text to log
+     */
+    public void logError(String error){
+        logError(error, "0");
+    }
+
+    /**
      * Returns the time for the log
      * @return formatted time to HH:MM
      */
