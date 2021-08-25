@@ -1,60 +1,75 @@
 package com.chimp.commands;
 
+import com.chimp.services.syntax.Command;
+import com.chimp.services.syntax.CommandWrapper;
+import com.chimp.services.syntax.ParameterType;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 
-public class CommandBan implements Command{
-    @Override
-    public void execute(@NotNull MessageReceivedEvent event) {
-        Message msg = event.getMessage();
-        Member member = event.getMember();
-        String messageContent = msg.getContentRaw();
-        MessageChannel channel = event.getChannel();
+public class CommandBan extends Command {
 
-        String[] messageContentParams = messageContent.split("\\s+");
-
-        if (msg.getMentionedMembers().isEmpty()){
-            return;
-        }
-        if(messageContentParams.length < 3) {
-            channel.sendMessage("Missing reason!").queue();
-            return;
-        }
-
-        StringBuilder reason = new StringBuilder();
-        for(int i = 2; i < messageContentParams.length; i++){
-            reason.append(messageContentParams[i]).append(" ");
-        }
-
-        Member target = msg.getMentionedMembers().get(0);
-        if (!member.canInteract(target) || !member.hasPermission(Permission.BAN_MEMBERS)) {
-            channel.sendMessage("You need permission to ban members!").queue();
-            return;
-        }
-
-        final Member selfMember = event.getGuild().getSelfMember();
-
-        if (!selfMember.canInteract(target) || !selfMember.hasPermission(Permission.BAN_MEMBERS)) {
-            event.getChannel().sendMessage("I don't have permission to ban members!").queue();
-            return;
-        }
-
-
-        event.getGuild()
-                .ban(target,0, reason.toString())
-                .reason(reason.toString())
-                .queue(
-                        (__) -> event.getChannel().sendMessage("Ban was successful").queue(),
-                        (error) -> event.getChannel().sendMessageFormat("Could not ban %s", error.getMessage()).queue()
-                );
+    public CommandBan(){
+        addOption("user", ParameterType.USER, true, "Defines the user to ban");
+        addOption("reason", ParameterType.STRING, false, "Defines the reason of ban");
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return "Used to ban memebers from server";
+    }
+
+    @Override
+    public void execute(CommandWrapper wrapper) throws Exception {
+        wrapper.assignOptions();
+
+        if(wrapper.hasUnusedValues())
+            reportError("Too many parameters!", wrapper);
+
+        String reason = wrapper.getOption("reason").asString();
+        Guild guild = wrapper.getGuild();
+        Member target = getTarget(wrapper);
+
+        checkUserPermissions(wrapper, target);
+        checkBotPermissions(wrapper, target);
+
+        guild.ban(target, 0, reason)
+             .reason(reason)
+             .queue(
+                     (__) -> reportInfo("Ban was successful", wrapper),
+                     (error) -> reportInfo("Could not ban %s" + error.getMessage(), wrapper)
+             );
+        }
+
+    private void checkBotPermissions(CommandWrapper wrapper, Member target) throws Exception{
+        Member selfMember = wrapper.getGuild().getSelfMember();
+        if (!selfMember.canInteract(target) || !selfMember.hasPermission(Permission.BAN_MEMBERS))
+            reportError("I need permission to ban members!", wrapper);
+    }
+
+    private void checkUserPermissions(CommandWrapper wrapper, Member target) throws Exception {
+        if(wrapper.isMessage()){
+            Guild guild = wrapper.getGuild();
+            User user = wrapper.getEvent().getAuthor();
+            Member member = guild.getMember(user);
+
+            if (!member.canInteract(target) || !member.hasPermission(Permission.BAN_MEMBERS))
+                reportError("You need permission to ban members!", wrapper);
+        }
+    }
+
+    @Nullable
+    private Member getTarget(CommandWrapper wrapper) throws Exception {
+        Member target;
+        Guild guild = wrapper.getGuild();
+        User userToBan = wrapper.getOption("user").asUser();
+
+        if(userToBan == null) reportError("Target user not found!", wrapper);
+        target = guild.getMember(userToBan);
+        if (target == null) reportError("Target user not found!", wrapper);
+
+        return target;
     }
 }
