@@ -20,12 +20,10 @@ public class BadUserDeserializer extends JsonDeserializer<BadUser> {
         JDA jda = ContextService.getJdaService().getJda();
         JsonNode node = jp.getCodec().readTree(jp);
 
-
         BehaviourState state = BehaviourState.valueOf(node.get("state").asText());
         int violationAmount = node.get("violationAmount").asInt();
         String memberId = node.get("memberId").asText();
         String guildId = node.get("guildId").asText();
-        // String name = node.get("name").asText();
 
         Guild guild = jda.getGuildById(guildId);
         assert guild != null;
