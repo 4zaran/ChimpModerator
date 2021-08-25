@@ -13,10 +13,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.module.SimpleModule;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
-public class JsonReader {
+public class FileReader {
     public static void loadConfig(){
         Logger logger = ContextService.getLogger();
         ObjectMapper mapper = new ObjectMapper();
@@ -52,5 +54,23 @@ public class JsonReader {
 
             AutoModerator.addRestrictions(restriction);
         }
+    }
+
+    public static String readTextFile(String path){
+        try {
+            StringBuilder text = new StringBuilder();
+            File file = new File(path);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                text.append(scanner.nextLine());
+                if(scanner.hasNextLine())
+                    text.append("\n");
+            }
+            scanner.close();
+            return String.valueOf(text);
+        } catch (FileNotFoundException e) {
+            ContextService.getLogger().logInfo(e.getLocalizedMessage());
+        }
+        return null;
     }
 }

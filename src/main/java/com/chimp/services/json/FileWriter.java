@@ -12,7 +12,7 @@ import org.codehaus.jackson.map.module.SimpleModule;
 import java.io.File;
 import java.io.IOException;
 
-public class JsonWriter {
+public class FileWriter {
 
     public static void saveConfig(){
         Logger logger = ContextService.getLogger();

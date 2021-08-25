@@ -1,5 +1,6 @@
 package com.chimp.services;
 
+import com.chimp.services.json.FileReader;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -26,9 +27,10 @@ public class JdaService extends ListenerAdapter {
      * Initiates the JDABuilder
      */
     public JdaService() {
+        String s = FileReader.readTextFile("test.txt");
+        System.out.println(s);
         ContextService.getLogger().logInfo("Connecting...");
-        // TODO LOAD TOKEN FROM FILE
-        String TOKEN = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
+        String TOKEN = FileReader.readTextFile("token.txt");
         jdaBuild = JDABuilder
                 .createDefault(TOKEN)
                 .addEventListeners(this);
@@ -57,8 +59,6 @@ public class JdaService extends ListenerAdapter {
     public JDA getJda() {
         return jda;
     }
-
-
 
     /**
      * Launched when JDA finished loading.

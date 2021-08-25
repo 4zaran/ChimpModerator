@@ -1,8 +1,8 @@
 package com.chimp.commands;
 
 import com.chimp.services.ContextService;
-import com.chimp.services.json.JsonReader;
-import com.chimp.services.json.JsonWriter;
+import com.chimp.services.json.FileReader;
+import com.chimp.services.json.FileWriter;
 import com.chimp.services.moderation.AutoModerator;
 import com.chimp.services.syntax.Command;
 import com.chimp.services.syntax.CommandWrapper;
@@ -76,10 +76,10 @@ public class CommandConfig extends Command {
             String value = pair.getValue();
             switch (pair.getKey()){
                 case "save":
-                    JsonWriter.saveConfig();
+                    FileWriter.saveConfig();
                     break;
                 case "load":
-                    JsonReader.loadConfig();
+                    FileReader.loadConfig();
                     break;
                 case "automoderator":
                     if(!value.equals("")){

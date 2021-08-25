@@ -23,14 +23,18 @@ com/chimp/commands/CommandKick.java
  com.chimp.commands.CommandKick
 com/chimp/commands/CommandBan.java
  com.chimp.commands.CommandBan
-com/chimp/services/json/JsonPackager.java
- com.chimp.services.json.JsonPackager
-com/chimp/services/json/JsonReader.java
- com.chimp.services.json.JsonReader
-com/chimp/services/json/JsonWriter.java
- com.chimp.services.json.JsonWriter
+com/chimp/services/Logger.java
+ com.chimp.services.Logger
+com/chimp/services/syntax/Command.java
+ com.chimp.services.syntax.Command
 com/chimp/services/moderation/BehaviourState.java
  com.chimp.services.moderation.BehaviourState
+com/chimp/services/json/JsonPackager.java
+ com.chimp.services.json.JsonPackager
+com/chimp/commands/CommandExit.java
+ com.chimp.commands.CommandExit
+com/chimp/services/moderation/GuildRestrictions.java
+ com.chimp.services.moderation.GuildRestrictions
 com/chimp/services/syntax/CommandSet.java
  com.chimp.services.syntax.CommandSet
 com/chimp/services/json/serializers/BadUserSerializer.java
@@ -41,16 +45,12 @@ com/chimp/services/moderation/BadUser.java
  com.chimp.services.moderation.BadUser
 com/chimp/commands/CommandCensored.java
  com.chimp.commands.CommandCensored
-com/chimp/services/syntax/Command.java
- com.chimp.services.syntax.Command
-com/chimp/services/Logger.java
- com.chimp.services.Logger
+com/chimp/services/json/FileWriter.java
+ com.chimp.services.json.FileWriter
 com/chimp/services/MessageInterpreter.java
  com.chimp.services.MessageInterpreter
-com/chimp/commands/CommandConfig.java
- com.chimp.commands.CommandConfig
-com/chimp/services/moderation/GuildRestrictions.java
- com.chimp.services.moderation.GuildRestrictions
+com/chimp/services/ContextService.java
+ com.chimp.services.ContextService
 com/chimp/window/WindowManager.java
  com.chimp.window.WindowManager
  com.chimp.window.WindowManager$1
@@ -58,15 +58,15 @@ com/chimp/services/json/deserializers/GuildDeserializer.java
  com.chimp.services.json.deserializers.GuildDeserializer
 com/chimp/ApplicationMain.java
  com.chimp.ApplicationMain
-com/chimp/services/JdaService.java
- com.chimp.services.JdaService
+com/chimp/services/syntax/OptionConverter.java
+ com.chimp.services.syntax.OptionConverter
 com/chimp/services/syntax/CommandWrapper.java
  com.chimp.services.syntax.CommandWrapper
 com/chimp/services/json/deserializers/BadUserDeserializer.java
  com.chimp.services.json.deserializers.BadUserDeserializer
-com/chimp/commands/CommandExit.java
- com.chimp.commands.CommandExit
-com/chimp/services/ContextService.java
- com.chimp.services.ContextService
-com/chimp/services/syntax/OptionConverter.java
- com.chimp.services.syntax.OptionConverter
+com/chimp/services/JdaService.java
+ com.chimp.services.JdaService
+com/chimp/services/json/FileReader.java
+ com.chimp.services.json.FileReader
+com/chimp/commands/CommandConfig.java
+ com.chimp.commands.CommandConfig
