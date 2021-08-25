@@ -27,8 +27,6 @@ public class JdaService extends ListenerAdapter {
      * Initiates the JDABuilder
      */
     public JdaService() {
-        String s = FileReader.readTextFile("test.txt");
-        System.out.println(s);
         ContextService.getLogger().logInfo("Connecting...");
         String TOKEN = FileReader.readTextFile("token.txt");
         jdaBuild = JDABuilder
