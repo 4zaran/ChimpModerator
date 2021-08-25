@@ -28,7 +28,7 @@ public class ApplicationMain {
             ContextService.create();
             ContextService.getManager().setupConsole();
             ContextService.getLogger().logInfo(ContextService.getInterpreter().getCommandCount());
-            ContextService.getAppService().connect();
+            ContextService.getJdaService().connect();
         }
         catch (Exception e){
             ContextService.getLogger().logError("Cause: " + e.getCause() + ", " + e.getLocalizedMessage());

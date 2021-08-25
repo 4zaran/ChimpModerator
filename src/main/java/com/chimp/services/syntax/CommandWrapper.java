@@ -1,8 +1,6 @@
 package com.chimp.services.syntax;
 
 import com.chimp.services.ContextService;
-import com.chimp.window.ComboItem;
-import com.chimp.window.WindowMain;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -94,7 +92,7 @@ public class CommandWrapper {
         this.event = null;
         this.logArea = logArea;
 
-        JDA jda = ContextService.getAppService().getJda();
+        JDA jda = ContextService.getJdaService().getJda();
         String channelId = getTextChannelIdFromLogAreaString(logArea);
         assert channelId != null;
         this.textChannel = jda.getTextChannelById(channelId);
@@ -173,8 +171,6 @@ public class CommandWrapper {
                         continue;
 
                     if(checkType(parameterType, option.getType())){
-                        // TODO without for; indexOf(option.getType())
-                        // TODO SEARCH UNTIL KEYWORD
                         int index = parameterTypes.indexOf(parameterType);
                         useValue(index, parameters.get(index), option.getName());
                         assigned = true;

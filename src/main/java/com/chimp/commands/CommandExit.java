@@ -20,7 +20,7 @@ public class CommandExit extends Command {
 
         if(wrapper.isMessage())
             wrapper.getEvent().getMessage().delete().complete();
-        ContextService.getAppService().getJda().shutdown();
+        ContextService.getJdaService().getJda().shutdown();
         System.exit(0);
     }
 }

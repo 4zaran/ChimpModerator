@@ -26,6 +26,8 @@ public class JdaService extends ListenerAdapter {
      * Initiates the JDABuilder
      */
     public JdaService() {
+        ContextService.getLogger().logInfo("Connecting...");
+        // TODO LOAD TOKEN FROM FILE
         String TOKEN = "ODE5NTUwMTU3MTM3NTEwNDIx.YEoPjw.UZhG6THDOqYdyWuZmGiqDcL3_a0";
         jdaBuild = JDABuilder
                 .createDefault(TOKEN)

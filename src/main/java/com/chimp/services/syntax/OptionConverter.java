@@ -28,9 +28,9 @@ public class OptionConverter {
         Pattern p = Pattern.compile("^(<@!?)([0-9]+)(>$)");
         Matcher m = p.matcher(value);
         if(m.find())
-            return ContextService.getAppService().getJda().getUserById(m.group(2));
+            return ContextService.getJdaService().getJda().getUserById(m.group(2));
         System.out.println(value.substring(1));
-        return ContextService.getAppService().getJda().getUserByTag(value.substring(1));
+        return ContextService.getJdaService().getJda().getUserByTag(value.substring(1));
     }
 
     public Boolean asBool(){
