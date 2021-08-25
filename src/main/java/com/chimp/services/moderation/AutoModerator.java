@@ -8,17 +8,16 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO UPDATE ALL JAVADOCS
 /**
  * Is used to do all the moderation work:
  * checking for violations, keeping track of violators, delegating punishments.
  */
 public class AutoModerator {
-    /** List of all guilds */
-    private static List<GuildRestrictions> guilds;
+    /** List of restrictions for guilds */
+    private static List<GuildRestrictions> guildRestrictions;
 
     public AutoModerator() {
-        guilds = new ArrayList<>();
+        guildRestrictions = new ArrayList<>();
     }
 
 
@@ -99,7 +98,7 @@ public class AutoModerator {
      */
     private static GuildRestrictions addGuildRestrictions(Guild guild){
         GuildRestrictions restrictions = new GuildRestrictions(guild);
-        guilds.add(restrictions);
+        guildRestrictions.add(restrictions);
         return restrictions;
     }
 
@@ -119,6 +118,11 @@ public class AutoModerator {
     }
 
     // GETTERS
+
+
+    public static List<GuildRestrictions> getRestrictions() {
+        return guildRestrictions;
+    }
 
     /**
      * Returns the information about moderation module ({@code AutoModerator}) being enabled for specified guild.
@@ -172,11 +176,19 @@ public class AutoModerator {
      * @return GuildRestriction object for guild
      */
     private static GuildRestrictions getGuildRestrictions(Guild guild){
-        for (GuildRestrictions g : guilds) {
+        for (GuildRestrictions g : guildRestrictions) {
             if(g.getGuild().equals(guild))
                 return g;
         }
         return addGuildRestrictions(guild);
+    }
+
+    public static GuildRestrictions getRestrictionsById(String id){
+        for (GuildRestrictions restriction : guildRestrictions) {
+            if(restriction.getGuild().getId().equals(id))
+                return restriction;
+        }
+        return null;
     }
 
     // SETTERS
@@ -209,5 +221,13 @@ public class AutoModerator {
     public static void setKickAmount(int kickAmount, Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         restrictions.setKickAmount(kickAmount);
+    }
+
+    public static void addRestrictions(GuildRestrictions restrictions){
+        guildRestrictions.add(restrictions);
+    }
+
+    public static void removeRestrictionsById(String guildId){
+        guildRestrictions.removeIf(restriction -> restriction.getGuild().getId().equals(guildId));
     }
 }

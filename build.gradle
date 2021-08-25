@@ -11,6 +11,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.fasterxml:jackson-xml-databind:0.6.2'
+    implementation 'org.codehaus.jackson:jackson-core-asl:1.9.13'
+    implementation 'com.fasterxml.jackson:jackson-base:2.12.4'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     implementation 'javax.json.bind:javax.json.bind-api:1.0'
@@ -18,6 +21,7 @@ dependencies {
     implementation 'org.glassfish:javax.json:1.1.2'
     implementation 'org.apache.geronimo.specs:geronimo-json_1.1_spec:1.0'
     implementation 'org.apache.johnzon:johnzon-jsonb:1.1.4'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.4'
     compile 'net.dv8tion:JDA:4.2.0_168'
     compile "org.slf4j:slf4j-simple:1.7.9"
     compile "javax.json.bind:javax.json.bind-api:1.0"

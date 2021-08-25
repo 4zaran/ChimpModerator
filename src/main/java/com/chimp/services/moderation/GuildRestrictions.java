@@ -42,6 +42,14 @@ public class GuildRestrictions {
     /** The guild that this object applies to. */
     private Guild guild;
 
+    public GuildRestrictions(){
+        this.guild = null;
+        this.enabled = true;
+        this.warnAmount = 3;
+        this.kickAmount = 3;
+        this.badUsers = new ArrayList<>();
+        this.censoredExpressions = new ArrayList<>();
+    }
 
     public GuildRestrictions(Guild guild) {
         this.guild = guild;
@@ -75,6 +83,18 @@ public class GuildRestrictions {
 
     public void setKickAmount(int kickAmount) {
         this.kickAmount = kickAmount;
+    }
+
+    public void setBadUsers(List<BadUser> badUsers) {
+        this.badUsers = badUsers;
+    }
+
+    public void setCensoredExpressions(List<String> censoredExpressions) {
+        this.censoredExpressions = censoredExpressions;
+    }
+
+    public void setGuild(Guild guild) {
+        this.guild = guild;
     }
 
     // -- GETTERS --

@@ -1,8 +1,10 @@
 package com.chimp.services.moderation;
 
+import com.chimp.services.json.serializers.BadUserSerializer;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.text.MessageFormat;
 
@@ -14,6 +16,7 @@ import static com.chimp.services.ContextService.getPrefix;
  * Every time that another user violates for the first time, BadUser's object is created for this user.
  * Holds current state of the violations.
  */
+@JsonSerialize(using = BadUserSerializer.class)
 public class BadUser {
     /** Defines in what state the user is in.
      * @see BehaviourState
@@ -35,6 +38,12 @@ public class BadUser {
         this.member = member;
         this.violationAmount = 0;
         state = BehaviourState.WARNED;
+    }
+
+    public BadUser(Member member, BehaviourState state, int violationAmount){
+        this.member = member;
+        this.violationAmount = violationAmount;
+        this.state = state;
     }
 
     public void hasViolated(TextChannel textChannel){
@@ -109,5 +118,13 @@ public class BadUser {
                 member.getId());
         String logArea = MessageFormat.format("{0}@{1}", textChannel.getId(), textChannel.getGuild().getId());
         getInterpreter().handleMessage(command, logArea);
+    }
+
+    public BehaviourState getState() {
+        return state;
+    }
+
+    public int getViolationAmount() {
+        return violationAmount;
     }
 }

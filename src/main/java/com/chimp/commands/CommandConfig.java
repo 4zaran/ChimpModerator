@@ -1,7 +1,9 @@
 package com.chimp.commands;
 
-import com.chimp.services.moderation.AutoModerator;
 import com.chimp.services.ContextService;
+import com.chimp.services.json.JsonReader;
+import com.chimp.services.json.JsonWriter;
+import com.chimp.services.moderation.AutoModerator;
 import com.chimp.services.syntax.Command;
 import com.chimp.services.syntax.CommandWrapper;
 import com.chimp.services.syntax.ParameterType;
@@ -13,6 +15,8 @@ import java.util.Map;
 public class CommandConfig extends Command {
 
     public CommandConfig(){
+        addOption("save", ParameterType.KEYWORD, false, "Used to save config to JSON file.");
+        addOption("load", ParameterType.KEYWORD, false, "Used to load config from a JSON file.");
         addOption("warn",
                 ParameterType.KEYWORD,
                 false,
@@ -71,6 +75,12 @@ public class CommandConfig extends Command {
             Map.Entry<String, String> pair = it.next();
             String value = pair.getValue();
             switch (pair.getKey()){
+                case "save":
+                    JsonWriter.saveConfig();
+                    break;
+                case "load":
+                    JsonReader.loadConfig();
+                    break;
                 case "automoderator":
                     if(!value.equals("")){
                         AutoModerator.setEnabled(Boolean.parseBoolean(value), guild);
