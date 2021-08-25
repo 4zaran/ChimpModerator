@@ -18,15 +18,12 @@ public class JsonWriter {
         Logger logger = ContextService.getLogger();
         ObjectMapper mapper = new ObjectMapper();
         JsonPackager packager = new JsonPackager();
+
         packager.setRestrictions(AutoModerator.getRestrictions());
         addSerializers(mapper);
 
         try {
-//            String s = mapper.writeValueAsString(packager);
-//            String s = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(packager);
-//            System.out.println(s);
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File("config.json"), packager);
-            //mapper.writeValue(new File("config.json"), restrictions);
             logger.logInfo("Saved successfully!");
         } catch (IOException e) {
             logger.logError(e.getLocalizedMessage());

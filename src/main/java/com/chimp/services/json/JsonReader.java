@@ -20,9 +20,8 @@ public class JsonReader {
     public static void loadConfig(){
         Logger logger = ContextService.getLogger();
         ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule("", Version.unknownVersion());
 
-        addDeserializers(mapper, module);
+        addDeserializers(mapper);
         try {
             JsonPackager packager = mapper.readValue(new File("config.json"), JsonPackager.class);
             extractPackager(packager);
@@ -32,7 +31,9 @@ public class JsonReader {
         }
     }
 
-    private static void addDeserializers(ObjectMapper mapper, SimpleModule module) {
+    private static void addDeserializers(ObjectMapper mapper) {
+        SimpleModule module = new SimpleModule("", Version.unknownVersion());
+
         module.addDeserializer(BadUser.class, new BadUserDeserializer());
         module.addDeserializer(Guild.class, new GuildDeserializer());
 
@@ -48,6 +49,7 @@ public class JsonReader {
             if(AutoModerator.getRestrictionsById(guildId) != null) {
                 AutoModerator.removeRestrictionsById(guildId);
             }
+
             AutoModerator.addRestrictions(restriction);
         }
     }

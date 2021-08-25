@@ -46,6 +46,8 @@ public class BadUser {
         this.state = state;
     }
 
+    // -- PUBLIC METHODS --
+
     public void hasViolated(TextChannel textChannel){
         Guild guild = member.getGuild();
         while (true) {
@@ -107,9 +109,7 @@ public class BadUser {
         }
     }
 
-    public Member getMember() {
-        return member;
-    }
+    // -- PRIVATE METHODS --
 
     private void executeCommand(String commandName, TextChannel textChannel) {
         String command = MessageFormat.format("{0}{1} <@!{2}> \"Violation of the rules\"",
@@ -118,6 +118,12 @@ public class BadUser {
                 member.getId());
         String logArea = MessageFormat.format("{0}@{1}", textChannel.getId(), textChannel.getGuild().getId());
         getInterpreter().handleMessage(command, logArea);
+    }
+
+    // -- GETTERS --
+
+    public Member getMember() {
+        return member;
     }
 
     public BehaviourState getState() {

@@ -89,6 +89,22 @@ public class AutoModerator {
         return expressions.toString();
     }
 
+    /**
+     * Adds new {@code GuildsRestrictions} object to list
+     * @param restrictions object to add
+     */
+    public static void addRestrictions(GuildRestrictions restrictions){
+        guildRestrictions.add(restrictions);
+    }
+
+    /**
+     * Removes from list {@code GuildRestrictions} object for guild with given id
+     * @param guildId of guild to remove
+     */
+    public static void removeRestrictionsById(String guildId){
+        guildRestrictions.removeIf(restriction -> restriction.getGuild().getId().equals(guildId));
+    }
+
     // PRIVATE METHODS
 
     /**
@@ -118,7 +134,6 @@ public class AutoModerator {
     }
 
     // GETTERS
-
 
     public static List<GuildRestrictions> getRestrictions() {
         return guildRestrictions;
@@ -183,6 +198,11 @@ public class AutoModerator {
         return addGuildRestrictions(guild);
     }
 
+    /**
+     * Return the {@code GuildRestrictions} object for guild with given id
+     * @param id of the guild
+     * @return GuildRestriction object related to given guild's id
+     */
     public static GuildRestrictions getRestrictionsById(String id){
         for (GuildRestrictions restriction : guildRestrictions) {
             if(restriction.getGuild().getId().equals(id))
@@ -221,13 +241,5 @@ public class AutoModerator {
     public static void setKickAmount(int kickAmount, Guild guild) {
         GuildRestrictions restrictions = getGuildRestrictions(guild);
         restrictions.setKickAmount(kickAmount);
-    }
-
-    public static void addRestrictions(GuildRestrictions restrictions){
-        guildRestrictions.add(restrictions);
-    }
-
-    public static void removeRestrictionsById(String guildId){
-        guildRestrictions.removeIf(restriction -> restriction.getGuild().getId().equals(guildId));
     }
 }
