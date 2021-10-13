@@ -11,16 +11,21 @@ Simple Discord moderation bot based on command execution.
   * [User format](#user-format)
   * [Kicking and banning users](#kicking-and-banning-users)
   * [Purge](#purge)
+  * [Censoring](#censoring)
+  * [Config](#config)
+  * [AutoModerator](#automoderator)
 
 ## Technologies
 
 Project is created with:
 
-  * Java 13
+  * Java
   * Swing
   * Gradle
   * JDA (Java Discord API)
-
+  * IntelliJ IDEA
+  * My 🧠 and 🖐
+  
 ## Features
   * A set of easy to use commands
   * Basic functionality like: `ban`, `kick`
@@ -73,14 +78,47 @@ Those commands can accept user in those formats:
 
 ### Purge
 
+Delete messages in large numbers (up to 100 / usage).
+
+NOTE: Expressions containing more than one word can be grouped as follows `"expression with 4 words"`
+
 List of all available filters:
-  * `contains`
-  * `equals`
-  * `startswith`
-  * `endswith`
-  * `from`
-  * `has`
+  * `contains [expression]`
+  * `equals [expression]`
+  * `startswith [expression]`
+  * `endswith [expression]`
+  * `from [user]`
+  * `has [file / embed / mentions / invites / reactions]`
 
-`!purge amount 55 from @User has mentions contains "lol"`
+`!purge amount 55 from @User has mentions contains "lol"` - from last 55 messages, delete those sent by mentioned user, containing at least one mention and word "lol"
 
-`!purge amount 10 equals "smh"`
+`!purge amount 10 equals "smh"` - from the last 10 messages, delete those which content is equal to "smh"
+
+### Censoring
+
+Managing censored expressions. 
+`!censored` - displays list of all censored expressions
+
+`!censored add [expression] [expression] ...` - add new expression(s)
+
+`!censored remove [expression]` - remove expression(s)
+
+### Config
+
+`!config automoderator` - check if [AutoModerator](#automoderator) is enabled
+
+`!config automoderator [true / false]` - enable / disable looking for censored expressions and executing punishments
+
+`!config [warn / kick]` - display warn / kick amount
+
+`!config [warn / kick] [int]` - set warn / kick amount
+
+`!config prefix` - display current prefix
+
+`!config prefix [new prefix]` - set new prefix
+
+`!config [save / load]` - save / load configuration
+
+### AutoModerator
+
+Keeps track of ...
