@@ -49,4 +49,8 @@ public class ContextService {
     public static String getPrefix() {
         return prefix;
     }
+
+    public static void setPrefix(String newPrefix){
+        prefix = newPrefix;
+    }
 }
