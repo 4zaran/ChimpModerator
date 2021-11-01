@@ -13,7 +13,8 @@ Simple Discord moderation bot based on command execution.
   * [Purge](#purge)
   * [Censoring](#censoring)
   * [Config](#config)
-  * [AutoModerator](#automoderator)
+* [AutoModerator](#automoderator)
+* [How to launch](#how-to-launch)
 
 ## Technologies
 
@@ -122,3 +123,9 @@ Managing censored expressions.
 ### AutoModerator
 
 Keeps track of all server violations. Decides when the violation occured and manages what punishment should be used. 
+
+
+### How to launch
+
+To do...
+I will attach a .jar file in the future.
