@@ -121,4 +121,4 @@ Managing censored expressions.
 
 ### AutoModerator
 
-Keeps track of ...
+Keeps track of all server violations. Decides when the violation occured and manages what punishment should be used. 
