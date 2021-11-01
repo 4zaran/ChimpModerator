@@ -249,7 +249,9 @@ public class CommandWrapper {
     private void setFields(@NotNull List<String> parameters) {
         this.parameters = parameters;
         this.optionAndValue = new HashMap<>();
-        this.commandName = parameters.get(0);
+        String c = parameters.get(0);
+        c = c.replaceFirst(getPrefix(), "");
+        this.commandName = c;
         parameters.remove(0);
     }
 
@@ -316,13 +318,11 @@ public class CommandWrapper {
     }
 
     public String getCommandName(){
-        if(commandName.startsWith(getPrefix()))
-            commandName = commandName.replaceFirst(getPrefix(), "");
-        return this.commandName;
+        return commandName;
     }
 
     private Command getCommand(){
-        return CommandSet.getCommands().get(commandName);
+        return CommandSet.getCommands().get(getCommandName());
     }
 
     public OptionConverter getOption(String optionName){

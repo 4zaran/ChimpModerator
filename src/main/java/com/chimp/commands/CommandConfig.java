@@ -48,6 +48,15 @@ public class CommandConfig extends Command {
                     false,
                     "This option is used to enable or disable the AutoModerator module." +
                             "It will accept only the \"true\"/\"false\" values.");
+
+        addOption("prefix",
+                ParameterType.KEYWORD,
+                false,
+                "This option defines prefix for all commands.").
+                addValue("expression",
+                        ParameterType.ANY,
+                        false,
+                        "This option is used to change the prefix.");
     }
 
     @Override
@@ -98,6 +107,11 @@ public class CommandConfig extends Command {
                     if(!value.equals(""))
                         AutoModerator.setKickAmount(Integer.parseInt(value), guild);
                     reportInfo("Kick count is now " + AutoModerator.getKickAmount(guild) + ".", wrapper);
+                    break;
+                case "prefix":
+                    if(!value.equals(""))
+                        ContextService.setPrefix(value);
+                    reportInfo("Current prefix is set to `" + ContextService.getPrefix() + "`", wrapper);
                     break;
                 default:
                     reportError("Unknown keyword!", wrapper);

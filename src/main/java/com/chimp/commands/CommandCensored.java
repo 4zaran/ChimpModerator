@@ -21,7 +21,7 @@ public class CommandCensored extends Command {
 
     @Override
     public String getDescription() {
-        return "Displays a list o all censored expressions.";
+        return "Displays a list of all censored expressions.";
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.ResumedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
@@ -28,10 +29,18 @@ public class JdaService extends ListenerAdapter {
      */
     public JdaService() {
         ContextService.getLogger().logInfo("Connecting...");
-        String TOKEN = FileReader.readTextFile("token.txt");
+        String TOKEN = getToken();
         jdaBuild = JDABuilder
                 .createDefault(TOKEN)
                 .addEventListeners(this);
+    }
+
+    @Nullable
+    private String getToken() {
+        String s = FileReader.readTextFile("token.txt");
+        if(s == null) ContextService.getLogger().logError("File token.txt not found! " +
+                "Please make sure that you have file named token.txt containing a valid bot token.");
+        return s;
     }
 
     /**
