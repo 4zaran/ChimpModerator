@@ -1,7 +1,3 @@
-# ChimpModerator
-
-Simple Discord moderation bot based on command execution.
-
 ## Table of contents
 * [Technologies](#technologies)
 * [Features](#features)
